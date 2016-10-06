@@ -1,3 +1,0 @@
-project adobe/rset ;
-
-run main.cpp /widgets : : : ;
