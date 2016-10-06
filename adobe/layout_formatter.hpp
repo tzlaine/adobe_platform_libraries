@@ -18,7 +18,6 @@
 #include <adobe/istream.hpp>
 #include <adobe/string.hpp>
 #include <adobe/utility/pair.hpp>
-#include <adobe/vector.hpp>
 
 /******************************************************************************/
 /*!

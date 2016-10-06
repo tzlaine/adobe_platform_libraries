@@ -642,8 +642,8 @@ private:
         proc_m(dictionary_t());
     }
 
-    proc_type                                       proc_m;
-    auto_ptr<typename poly_sequence_model<T>::type> poly_m;
+    proc_type                                              proc_m;
+    std::unique_ptr<typename poly_sequence_model<T>::type> poly_m;
 };
 
 /******************************************************************************/

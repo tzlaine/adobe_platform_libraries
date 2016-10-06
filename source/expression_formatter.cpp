@@ -99,17 +99,17 @@ std::string expression_formatter_t::format(const array_t& expression,
 
     for(array_t::const_iterator iter(expression.begin()); iter != expression.end(); ++iter)
     {
-        if (iter->type_info() == typeid(name_t) && iter->cast<name_t>().c_str()[0] == '.')
+        if (iter->type_info() == boost::typeindex::type_id<name_t>() && iter->cast<name_t>().c_str()[0] == '.')
             operator_table_m(iter->cast<name_t>())();
         else
         {
             std::stringstream stream;
 
-            if (iter->type_info() == typeid(name_t))
+            if (iter->type_info() == boost::typeindex::type_id<name_t>())
                 stream << "@" << *iter;
-            else if (iter->type_info() == typeid(std::string))
+            else if (iter->type_info() == boost::typeindex::type_id<std::string>())
                 stream << "\"" << *iter << "\"";
-            else if (iter->type_info() == typeid(array_t))
+            else if (iter->type_info() == boost::typeindex::type_id<array_t>())
             {
                 const array_t& array(iter->cast<array_t>());
 
@@ -118,9 +118,9 @@ std::string expression_formatter_t::format(const array_t& expression,
                 else
                     stream << format_expression(array, indent_m + 4);
             }
-            else if (iter->type_info() == typeid(dictionary_t))
+            else if (iter->type_info() == boost::typeindex::type_id<dictionary_t>())
                 stream << "{ }";
-            else if (iter->type_info() == typeid(bool))
+            else if (iter->type_info() == boost::typeindex::type_id<bool>())
                 stream << (iter->cast<bool>() ? "true" : "false");
             else
                 stream << *iter;

@@ -94,10 +94,10 @@ private:
     // order of destruction matters here, so please make sure
     // you know what you're doing when you go to reorder these.
 
-    sheet_t                     sublayout_sheet_m;
-    auto_ptr<eve_client_holder> sublayout_holder_m;
-    panel_t                     root_m;
-    vm_lookup_t                 vm_lookup_m;
+    sheet_t                            sublayout_sheet_m;
+    std::unique_ptr<eve_client_holder> sublayout_holder_m;
+    panel_t                            root_m;
+    vm_lookup_t                        vm_lookup_m;
 };
 
 /****************************************************************************************************/

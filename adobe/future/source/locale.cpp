@@ -13,9 +13,7 @@
 #include <adobe/name.hpp>
 #include <adobe/once.hpp>
 
-/**************************************************************************************************/
-
-using namespace std;
+#include <mutex>
 
 /**************************************************************************************************/
 
@@ -39,8 +37,8 @@ void init_locale_once()
 
 void locale_once()
 {
-    static once_flag flag;
-    call_once(flag, &init_locale_once);
+    static std::once_flag flag;
+    std::call_once(flag, &init_locale_once);
 }
 
 /**************************************************************************************************/

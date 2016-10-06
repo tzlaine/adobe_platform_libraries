@@ -52,7 +52,7 @@ struct image_t : boost::noncopyable
     bool                               enabled_m;
 
     // mouse tracking stuff
-    adobe::auto_ptr<message_handler_t> handler_m;
+    std::unique_ptr<message_handler_t> handler_m;
     HWND                               prev_capture_m;
     bool                               tracking_m;
     POINTS                             last_point_m;

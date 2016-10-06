@@ -28,7 +28,7 @@ void imbue_preset(sheet_t& model, const any_regular_t& value)
     // when a preset is selected from the list, you're going to get a dictionary of the
     // actual property model values that need to get propagated to the property model.
 
-    if (value.type_info() != typeid(dictionary_t))
+    if (value.type_info() != boost::typeindex::type_id<dictionary_t>())
         return;
 
     model.set(value.cast<dictionary_t>());

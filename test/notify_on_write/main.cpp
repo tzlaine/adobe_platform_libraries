@@ -38,7 +38,7 @@ struct notify_proc
     {
         const value_type& value(*now);
 
-        std::cout << typeid(value_type).name() << " ctor ";
+        std::cout << boost::typeindex::type_id<value_type>().name() << " ctor ";
         if (mapper_m)
             std::cout << '[' << mapper_m(now) << ']';
         else
@@ -50,7 +50,7 @@ struct notify_proc
     {
         const value_type& value(*now);
 
-        std::cout << typeid(value_type).name() << " dtor ";
+        std::cout << boost::typeindex::type_id<value_type>().name() << " dtor ";
         if (mapper_m)
             std::cout << '[' << mapper_m(now) << ']';
         else
@@ -62,7 +62,7 @@ struct notify_proc
     {
         const value_type& value(*now);
 
-        std::cout << typeid(value_type).name() << " modify ";
+        std::cout << boost::typeindex::type_id<value_type>().name() << " modify ";
         if (mapper_m)
             std::cout << '[' << mapper_m(now) << ']';
         else

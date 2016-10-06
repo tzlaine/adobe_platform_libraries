@@ -69,6 +69,7 @@
 #include <cassert>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <string>
 
 /*************************************************************************************************/
@@ -294,49 +295,49 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-auto_ptr<eve_client_holder> make_view(name_t                                 file_path,
-                                      const line_position_t::getline_proc_t& getline_proc,
-                                      std::istream&                          stream,
-                                      sheet_t&                               sheet,
-                                      behavior_t&                            root_behavior,
-                                      const button_notifier_t&               notifier,
-                                      size_enum_t                            dialog_size,
-                                      const widget_factory_proc_t&           proc,
-                                      platform_display_type                  display_root)
-{
-    adobe::auto_ptr<eve_client_holder>  result(new eve_client_holder(root_behavior));
-    factory_token_t                     token(get_main_display(),
-                                              sheet,
-                                              *(result.get()),
-                                              notifier);
+    std::unique_ptr<eve_client_holder> make_view(name_t                                 file_path,
+                                                 const line_position_t::getline_proc_t& getline_proc,
+                                                 std::istream&                          stream,
+                                                 sheet_t&                               sheet,
+                                                 behavior_t&                            root_behavior,
+                                                 const button_notifier_t&               notifier,
+                                                 size_enum_t                            dialog_size,
+                                                 const widget_factory_proc_t&           proc,
+                                                 platform_display_type                  display_root)
+    {
+        std::unique_ptr<eve_client_holder>  result(new eve_client_holder(root_behavior));
+        factory_token_t                     token(get_main_display(),
+                                                  sheet,
+                                                  *(result.get()),
+                                                  notifier);
 
-    vm_lookup_t       lookup;
+        vm_lookup_t       lookup;
 
-    lookup.attach_to(result->layout_sheet_m.machine_m);
+        lookup.attach_to(result->layout_sheet_m.machine_m);
 
-    /*
-        We set the initial parent to be the root of the main display, an
-        empty eve iterator and the given dialog size.
-    */
-    get_main_display().set_root(display_root);
+        /*
+          We set the initial parent to be the root of the main display, an
+          empty eve iterator and the given dialog size.
+        */
+        get_main_display().set_root(display_root);
 
 	result->layout_sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::layout_variables, boost::ref(result->layout_sheet_m), _1));
 
-    parse(stream,
-                 line_position_t(file_path, getline_proc),
-                 widget_node_t(dialog_size,
-                                      eve_t::iterator(),
-                                      get_main_display().root(),
-                                      keyboard_t::iterator()),
-                 bind_layout(boost::bind(&client_assembler,
-                                         boost::ref(token), _1, _2, _3, boost::cref(proc)),
-                             result->layout_sheet_m,
-                             result->layout_sheet_m.machine_m));
+        parse(stream,
+              line_position_t(file_path, getline_proc),
+              widget_node_t(dialog_size,
+                            eve_t::iterator(),
+                            get_main_display().root(),
+                            keyboard_t::iterator()),
+              bind_layout(boost::bind(&client_assembler,
+                                      boost::ref(token), _1, _2, _3, boost::cref(proc)),
+                          result->layout_sheet_m,
+                          result->layout_sheet_m.machine_m));
     
-    result->contributing_m = sheet.contributing();
+        result->contributing_m = sheet.contributing();
 
-    return result;
-}
+        return result;
+    }
 
 /*************************************************************************************************/
 

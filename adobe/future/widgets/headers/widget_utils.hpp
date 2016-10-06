@@ -12,6 +12,7 @@
 
 #include <adobe/future/widgets/headers/platform_widget_utils.hpp>
 #include <adobe/extents.hpp>
+#include <adobe/name.hpp>
 
 #include <adobe/future/platform_primitives.hpp>
 
@@ -61,7 +62,7 @@ namespace implementation {
 
 /**************************************************************************************************/
 
-#if ADOBE_PLATFORM_WIN || (ADOBE_PLATFORM_MAC && !defined(__LP64__))
+#if ADOBE_PLATFORM_WIN || (ADOBE_PLATFORM_MAC && !defined(__LP64__)) || ADOBE_PLATFORM_UE4_UMG
 
 /****************************************************************************************************/
 

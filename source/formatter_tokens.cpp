@@ -15,7 +15,7 @@ namespace adobe {
 
 /******************************************************************************/
 
-#define ADOBE_TOKEN_DEF(x) extern const static_name_t key_##x = { #x };
+#define ADOBE_TOKEN_DEF(x) extern const static_name_t key_##x = #x##_name ;
 
 ADOBE_TOKEN_DEF(cell_type)
 ADOBE_TOKEN_DEF(comment_brief)

@@ -10,6 +10,7 @@
 #include <adobe/future/widgets/headers/platform_presets.hpp>
 #include <adobe/future/widgets/headers/presets_common.hpp>
 
+#include <mutex>
 #include <sstream>
 #include <string>
 
@@ -33,8 +34,6 @@
     #include <adobe/iomanip_asl_cel.hpp>
 #endif
 
-using namespace std;
-
 /**************************************************************************************************/
 
 namespace {
@@ -56,8 +55,8 @@ void init_presets_once()
 
 void presets_once()
 {
-    static once_flag flag;
-    call_once(flag, &init_presets_once);
+    static std::once_flag flag;
+    std::call_once(flag, &init_presets_once);
 }
 
 /**************************************************************************************************/
@@ -98,14 +97,14 @@ void append_definitions(const adobe::array_t& element,
 {
     if (element.size() != 2)
         return;
-    else if (element[1].type_info() != typeid(string))
+    else if (element[1].type_info() != boost::typeindex::type_id<std::string>())
         return;
 
     adobe::array_t cell_array;
 
-    if (element[0].type_info() == typeid(adobe::name_t))
+    if (element[0].type_info() == boost::typeindex::type_id<adobe::name_t>())
         cell_array.push_back(element[0]);
-    else if (element[0].type_info() == typeid(cell_array))
+    else if (element[0].type_info() == boost::typeindex::type_id<adobe::array_t>())
         cell_array = element[0].cast<adobe::array_t>();
     else
         throw std::runtime_error("Preset: Expected either a name or an array of names in item");
@@ -220,7 +219,7 @@ const adobe::dictionary_t& preset_menu_item_separator()
 boost::filesystem::path user_preset_filepath(adobe::presets_t& control)
 {
     std::string user_preset_file_extension(adobe::implementation::localization_value(control, adobe::key_preset_file_extension, ".presets"));
-    std::string user_preset_filename = string() + control.name_m + user_preset_file_extension;
+    std::string user_preset_filename = std::string() + control.name_m + user_preset_file_extension;
 
     boost::filesystem::path result(adobe::implementation::preset_directory(control) / user_preset_filename);
 
@@ -514,7 +513,7 @@ void append_user_preset(presets_t& control, const dictionary_t& snapshot)
 
     for (array_t::const_iterator first(control.bind_set_m.begin()), last(first + half_count); first != last; ++first)
     {
-        if (first->type_info() != typeid(array_t))
+        if (first->type_info() != boost::typeindex::type_id<array_t>())
             throw std::runtime_error("Preset: expected an array_t for the item in the preset");
 
         append_definitions(first->cast<array_t>(), preset_dialog_model, preset_layout, preset_dialog_model_result_footer);
@@ -524,7 +523,7 @@ void append_user_preset(presets_t& control, const dictionary_t& snapshot)
 
     for (array_t::const_iterator first(control.bind_set_m.begin() + half_count), last(control.bind_set_m.end()); first != last; ++first)
     {
-        if (first->type_info() != typeid(array_t))
+        if (first->type_info() != boost::typeindex::type_id<array_t>())
             throw std::runtime_error("Preset: expected an array_t for the item in the preset");
 
         append_definitions(first->cast<array_t>(), preset_dialog_model, preset_layout, preset_dialog_model_result_footer);
@@ -565,7 +564,7 @@ void append_user_preset(presets_t& control, const dictionary_t& snapshot)
 
     assert(result.command_m.count(preset_name));
     assert(snapshot.count(key_preset_value));
-    assert(get_value(snapshot, key_preset_value).type_info() == typeid(dictionary_t));
+    assert(get_value(snapshot, key_preset_value).type_info() == boost::typeindex::type_id<dictionary_t>());
 
     std::string the_preset_name(get_value(result.command_m, preset_name).cast<std::string>());
 
@@ -581,7 +580,7 @@ void append_user_preset(presets_t& control, const dictionary_t& snapshot)
     for (dictionary_t::const_iterator first(result.command_m.begin()), last(result.command_m.end());
          first != last; ++first)
     {
-        assert(first->second.type_info() == typeid(bool));
+        assert(first->second.type_info() == boost::typeindex::type_id<bool>());
 
         name_t preset_attribute(first->first);
         bool          should_add(first->second.cast<bool>());
@@ -776,8 +775,8 @@ array_t load_user_preset_set(presets_t& control)
         array_t      items;
         std::string         name(implementation::localization_value(control, key_preset_user_presets_category_name, "User Presets"));
 
-        user_preset_category.insert(std::make_pair(key_preset_items, items));
-        user_preset_category.insert(std::make_pair(key_preset_name, name));
+        user_preset_category.insert(std::make_pair(key_preset_items, any_regular_t(items)));
+        user_preset_category.insert(std::make_pair(key_preset_name, any_regular_t(name)));
 
         push_back(set, user_preset_category);
     }
@@ -815,8 +814,8 @@ array_t load_default_preset_set(presets_t& control)
 
 std::string localization_value(const dictionary_t& set, name_t key, const std::string& default_string)
 {
-    return set.count(key) && get_value(set, key).type_info() == typeid(string) ?
-        std::string(get_value(set, key).cast<string>()) :
+    return set.count(key) && get_value(set, key).type_info() == boost::typeindex::type_id<std::string>() ?
+        std::string(get_value(set, key).cast<std::string>()) :
         default_string;
 }
 

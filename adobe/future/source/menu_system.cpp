@@ -334,7 +334,7 @@ void menu_system_t::implementation_t::insert_item(  name_t   parent_name,
 {
     component_t& parent(find(parent_name));
 
-    assert (parent.ref_m.type() == typeid(::MenuRef));
+    assert (parent.ref_m.type() == boost::typeindex::type_id< ::MenuRef>());
 
     ::MenuRef parent_menu_ref(parent.ref_m.get< ::MenuRef>());
 
@@ -373,7 +373,7 @@ void menu_system_t::implementation_t::insert_separator(name_t parent_name)
 {
     component_t& parent(find(parent_name));
 
-    assert (parent.ref_m.type() == typeid(::MenuRef));
+    assert (parent.ref_m.type() == boost::typeindex::type_id< ::MenuRef>());
 
     ::MenuRef parent_menu_ref(parent.ref_m.get< ::MenuRef>());
 

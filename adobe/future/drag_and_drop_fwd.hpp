@@ -52,13 +52,13 @@ void register_dnd_converter(boost::uint32_t                       flavor,
 template <typename T>
 inline void register_dnd_converter(boost::uint32_t                      flavor,
                                    const poly_drag_and_drop_converter_t& converter)
-{ register_dnd_converter(flavor, typeid(T), converter); }
+{ register_dnd_converter(flavor, boost::typeindex::type_id<T<(), converter); }
 
 bool is_dnd_converter_registered(boost::uint32_t flavor, const std::type_info& target_type_info);
 
 template <typename T>
 inline bool is_dnd_converter_registered(boost::uint32_t flavor)
-{ return is_dnd_converter_registered(flavor, typeid(T)); }
+{ return is_dnd_converter_registered(flavor, boost::typeindex::type_id<T>()); }
 
 /**************************************************************************************************/
 
@@ -70,7 +70,7 @@ template <typename DestType, typename SourceType>
 inline DestType invoke_dnd_converter(boost::uint32_t flavor, const SourceType& raw_value)
 {
     return dnd_converter_invoke(flavor,
-                                typeid(DestType),
+                                boost::typeindex::type_id<DestType>(),
                                 any_regular_t(raw_value)).cast<DestType>();
 }
 
@@ -78,7 +78,7 @@ template <typename DestType, typename SourceType>
 bool invoke_dnd_converter(boost::uint32_t flavor, const SourceType& raw_value, DestType& result)
 {
     return dnd_converter_invoke(flavor,
-                                typeid(DestType),
+                                boost::typeindex::type_id<DestType>(),
                                 any_regular_t(raw_value)).cast<DestType>(result);
 }
 
@@ -107,13 +107,13 @@ void register_dnd_extractor(boost::uint32_t                    flavor,
 template <typename T>
 inline void register_dnd_extractor(boost::uint32_t                    flavor,
                                    const dnd_flavor_extractor_proc_t& extractor)
-{ register_dnd_extractor(flavor, typeid(T), extractor); }
+{ register_dnd_extractor(flavor, boost::typeindex::type_id<T>(), extractor); }
 
 bool is_dnd_extractor_registered(boost::uint32_t flavor, const std::type_info& target_type_info);
 
 template <typename T>
 inline bool is_dnd_extractor_registered(boost::uint32_t flavor)
-{ return is_dnd_extractor_registered(flavor, typeid(T)); }
+{ return is_dnd_extractor_registered(flavor, boost::typeindex::type_id<T>()); }
 
 any_regular_t dnd_extractor_invoke(boost::uint32_t       flavor,
                                    const std::type_info& target_type_info,
@@ -123,7 +123,7 @@ template <typename DestType>
 inline DestType invoke_dnd_extractor(boost::uint32_t flavor, const dictionary_t& drag_parameters)
 {
     return dnd_extractor_invoke(flavor,
-                                typeid(DestType),
+                                boost::typeindex::type_id<DestType>(),
                                 drag_parameters).cast<DestType>();
 }
 
@@ -131,7 +131,7 @@ template <typename DestType>
 bool invoke_dnd_extractor(boost::uint32_t flavor, const dictionary_t& drag_parameters, DestType& result)
 {
     return dnd_extractor_invoke(flavor,
-                                typeid(DestType),
+                                boost::typeindex::type_id<DestType>(),
                                 drag_parameters).cast<DestType>(result);
 }
 

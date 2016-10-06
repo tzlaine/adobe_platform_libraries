@@ -25,7 +25,7 @@
 
     #include <windows.h>
 #elif ADOBE_PLATFORM_MAC
-	#include <adobe/macintosh_memory.hpp>
+    #include <adobe/macintosh_memory.hpp>
     #include <adobe/future/macintosh_events.hpp>
 #endif
 

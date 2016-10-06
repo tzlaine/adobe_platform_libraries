@@ -57,7 +57,7 @@ modifiers_t value_to_modifier(const any_regular_t& modifier_set)
 {
     modifiers_t result(modifiers_none_s);
 
-    if (modifier_set.type_info() == typeid(name_t))
+    if (modifier_set.type_info() == boost::typeindex::type_id<name_t>())
     {
         result |= name_to_modifer(modifier_set.cast<name_t>());
     }
