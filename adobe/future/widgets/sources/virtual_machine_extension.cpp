@@ -104,36 +104,34 @@ std::ostream& operator<<(std::ostream& s, const boost::gil::rgba8_image_t& /*ima
 
 /**************************************************************************************************/
 
-any_regular_t asl_standard_dictionary_function_lookup(name_t              function_name,
-                                                      const dictionary_t& named_argument_set)
+virtual_machine_t::dictionary_function_t asl_standard_dictionary_function_lookup(name_t function_name)
 {
     if (function_name == "image"_name)
     {
-        return implementation::vm_dictionary_image_proc(named_argument_set);
+        return implementation::vm_dictionary_image_proc;
     }
     else
     {
         throw_function_not_defined(function_name);
     }
 
-    return any_regular_t(empty_t());
+    return virtual_machine_t::dictionary_function_t();
 }
 
 /**************************************************************************************************/
 
-any_regular_t asl_standard_array_function_lookup(name_t         function_name,
-                                                 const array_t& argument_set)
+virtual_machine_t::array_function_t asl_standard_array_function_lookup(name_t function_name)
 {
     if (function_name == "image"_name)
     {
-        return implementation::vm_array_image_proc(argument_set);
+        return implementation::vm_array_image_proc;
     }
     else
     {
         throw_function_not_defined(function_name);
     }
 
-    return any_regular_t(empty_t());
+    return virtual_machine_t::array_function_t();
 }
 
 /**************************************************************************************************/
@@ -172,31 +170,31 @@ void vm_lookup_t::insert_array_function(name_t name, const array_function_t& pro
 
 void vm_lookup_t::attach_to(virtual_machine_t& vm)
 {
-    vm.set_dictionary_function_lookup(boost::bind(&vm_lookup_t::dproc, boost::cref(*this), _1, _2));
-    vm.set_array_function_lookup(boost::bind(&vm_lookup_t::aproc, boost::cref(*this), _1, _2));
+    vm.set_dictionary_function_lookup(boost::bind(&vm_lookup_t::dproc, boost::cref(*this), _1));
+    vm.set_array_function_lookup(boost::bind(&vm_lookup_t::aproc, boost::cref(*this), _1));
     vm.set_variable_lookup(boost::ref(variable_lookup_m));
 }
 
 /**************************************************************************************************/
 
-any_regular_t vm_lookup_t::dproc(name_t name, const dictionary_t& argument_set) const
+vm_lookup_t::dictionary_function_t vm_lookup_t::dproc(name_t name) const
 {
     dictionary_function_map_t::const_iterator found(dmap_m.find(name));
 
     if (found != dmap_m.end())
-        return found->second(argument_set);
+        return found->second;
 
     throw std::runtime_error(adobe::make_string("DFunction ", name.c_str(), " not found."));
 }
 
 /**************************************************************************************************/
 
-any_regular_t vm_lookup_t::aproc(name_t name, const array_t& argument_set) const
+vm_lookup_t::array_function_t vm_lookup_t::aproc(name_t name) const
 {
     array_function_map_t::const_iterator found(amap_m.find(name));
 
     if (found != amap_m.end())
-        return found->second(argument_set);
+        return found->second;
 
     throw std::runtime_error(adobe::make_string("AFunction ", name.c_str(), " not found."));
 }

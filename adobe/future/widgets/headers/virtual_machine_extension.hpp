@@ -51,11 +51,9 @@ std::ostream& operator<<(std::ostream& s, const boost::gil::rgba8_image_t& image
 
 /**************************************************************************************************/
 
-any_regular_t asl_standard_dictionary_function_lookup(name_t              function_name,
-                                                      const dictionary_t& named_argument_set);
+virtual_machine_t::dictionary_function_t asl_standard_dictionary_function_lookup(name_t function_name);
 
-any_regular_t asl_standard_array_function_lookup(name_t         function_name,
-                                                 const array_t& argument_set);
+virtual_machine_t::array_function_t asl_standard_array_function_lookup(name_t function_name);
 
 /**************************************************************************************************/
 
@@ -104,8 +102,8 @@ public:
     void attach_to(sheet_t&);
 
 private:
-    any_regular_t dproc(name_t name, const dictionary_t& argument_set) const;
-    any_regular_t aproc(name_t name, const array_t& argument_set) const;
+    dictionary_function_t dproc(name_t name) const;
+    array_function_t aproc(name_t name) const;
 
     dictionary_function_map_t dmap_m;
     array_function_map_t      amap_m;
