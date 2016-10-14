@@ -62,23 +62,23 @@ set(sources
     ../ue4_umg/adobe/future/widgets/sources/platform_display_number.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_edit_number.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_edit_text.cpp
-#    ../ue4_umg/adobe/future/widgets/sources/platform_group.cpp
+    ../ue4_umg/adobe/future/widgets/sources/platform_group.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_image.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_label.cpp
 #    ../ue4_umg/adobe/future/widgets/sources/platform_link.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_metrics.cpp
-#    ../ue4_umg/adobe/future/widgets/sources/platform_optional_panel.cpp
-#    ../ue4_umg/adobe/future/widgets/sources/platform_panel.cpp
+    ../ue4_umg/adobe/future/widgets/sources/platform_optional_panel.cpp
+    ../ue4_umg/adobe/future/widgets/sources/platform_panel.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_popup.cpp
 #    ../ue4_umg/adobe/future/widgets/sources/platform_presets.cpp
 #    ../ue4_umg/adobe/future/widgets/sources/platform_preview.cpp
-#    ../ue4_umg/adobe/future/widgets/sources/platform_progress_bar.cpp
+    ../ue4_umg/adobe/future/widgets/sources/platform_progress_bar.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_radio_button.cpp
-#    ../ue4_umg/adobe/future/widgets/sources/platform_reveal.cpp
+    ../ue4_umg/adobe/future/widgets/sources/platform_reveal.cpp
 #    ../ue4_umg/adobe/future/widgets/sources/platform_separator.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_slider.cpp
-#    ../ue4_umg/adobe/future/widgets/sources/platform_tab_group.cpp
-#    ../ue4_umg/adobe/future/widgets/sources/platform_toggle.cpp
+    ../ue4_umg/adobe/future/widgets/sources/platform_tab_group.cpp
+    ../ue4_umg/adobe/future/widgets/sources/platform_toggle.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_widget_utils.cpp
     ../ue4_umg/adobe/future/widgets/sources/platform_window.cpp
 )

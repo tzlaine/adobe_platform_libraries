@@ -5,14 +5,6 @@
 */
 /****************************************************************************************************/
 
-#define WINDOWS_LEAN_AND_MEAN 1
-
-#include <windows.h>
-#include <commctrl.h>
-#include <tmschema.h>
-#define SCHEME_STRINGS 1
-#include <tmschema.h> //Yes, we include this twice -- read the top of the file
-
 #include <adobe/algorithm.hpp>
 
 #include <adobe/future/widgets/headers/platform_tab_group.hpp>
@@ -27,12 +19,13 @@ namespace adobe {
 
 /****************************************************************************************************/
 
+/* TODO: Add this functionality in a platform-specific way.
 LRESULT CALLBACK tab_group_subclass_proc(HWND     window,
                                          UINT     message,
                                          WPARAM   wParam,
                                          LPARAM   lParam,
                                          UINT_PTR ptr,
-                                         DWORD_PTR /* ref */)
+                                         DWORD_PTR)
 {
     tab_group_t& tab_group(*reinterpret_cast<tab_group_t*>(ptr));
     NMHDR*                         notice((NMHDR*) lParam);
@@ -63,21 +56,26 @@ LRESULT CALLBACK tab_group_subclass_proc(HWND     window,
 
     return ::DefSubclassProc(window, message, wParam, lParam);
 }
-
-
-/****************************************************************************************************/
-
-tab_group_t::tab_group_t(const tab_t* first, const tab_t* last, theme_t theme)
-: control_m(NULL), theme_m(theme), value_proc_m(), items_m(first, last)
-{
-}
+*/
 
 /****************************************************************************************************/
 
-void tab_group_t::initialize(HWND parent)
+tab_group_t::tab_group_t(const tab_t* first,
+                         const tab_t* last,
+                         theme_t theme) :
+    control_m(NULL),
+    theme_m(theme),
+    value_proc_m(),
+    items_m(first, last)
+{ }
+
+/****************************************************************************************************/
+
+void tab_group_t::initialize(platform_display_type parent)
 {
     assert (!control_m);
 
+    /* TODO
     control_m = ::CreateWindowEx(WS_EX_COMPOSITED | WS_EX_CONTROLPARENT,
                                  WC_TABCONTROL,
                                  NULL,
@@ -105,6 +103,7 @@ void tab_group_t::initialize(HWND parent)
 
         ::SendMessage(control_m, TCM_INSERTITEM, ::SendMessage(control_m, TCM_GETITEMCOUNT, 0, 0), (LPARAM) &item);
     }
+    */
 }
 
 /****************************************************************************************************/
@@ -118,7 +117,7 @@ void tab_group_t::measure(extents_t& result)
     for (tab_set_t::iterator first(items_m.begin()), last(items_m.end()); first != last; ++first)
     {
         extents_t attrs;
-        measure_label_text(label_t(first->name_m, std::string(), 0, theme_m), attrs, ::GetParent(control_m));
+        // TODO measure_label_text(label_t(first->name_m, std::string(), 0, theme_m), attrs, ::GetParent(control_m));
 
         result.width() += attrs.width() + 18;
         result.height() = (std::max)(result.height(), attrs.height());
@@ -146,7 +145,7 @@ void tab_group_t::display(const any_regular_t& new_value)
 
     if (iter == items_m.end()) return;
 
-    ::SendMessage(control_m, TCM_SETCURSEL, iter - items_m.begin(), 0);
+    // TODO ::SendMessage(control_m, TCM_SETCURSEL, iter - items_m.begin(), 0);
 }
 
 /****************************************************************************************************/
@@ -162,14 +161,11 @@ void tab_group_t::monitor(const tab_group_value_proc_t& proc)
 /****************************************************************************************************/
 
 template <>
-platform_display_type insert<tab_group_t>(display_t&             display,
-                                                platform_display_type&  parent,
-                                                tab_group_t&     element)
+platform_display_type insert<tab_group_t>(display_t& display,
+                                          platform_display_type& parent,
+                                          tab_group_t& element)
 {
-    HWND parent_hwnd(parent);
-
-    element.initialize(parent_hwnd);
-
+    element.initialize(parent);
     return display.insert(parent, element.control_m);
 }
 

@@ -30,12 +30,12 @@ struct reveal_t : boost::noncopyable
 
     typedef boost::function<void (const model_type&)> setter_type;
 
-    reveal_t(const std::string&				name,
-             const any_regular_t&	show_value,
-             theme_t						theme,
-             const std::string&				alt_text);
+    reveal_t(const std::string& name,
+             const any_regular_t& show_value,
+             theme_t theme,
+             const std::string& alt_text);
 
-#if 0 // TODO
+#if 1 // TODO
     void initialize(platform_display_type parent);
 #endif
 

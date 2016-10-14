@@ -6,33 +6,10 @@
 /****************************************************************************************************/
 
 
-#define WINDOWS_LEAN_AND_MEAN 1
-
-#include <windows.h>
-#include <commctrl.h>
-#include <tmschema.h>
-#define SCHEME_STRINGS 1
-#include <tmschema.h> //Yes, we include this twice -- read the top of the file
-
-#include <boost/bind.hpp>
-
 #include <adobe/future/widgets/headers/platform_optional_panel.hpp>
 #include <adobe/future/widgets/headers/display.hpp>
 
 #include <boost/bind.hpp>
-
-/****************************************************************************************************/
-
-namespace {
-
-/****************************************************************************************************/
-
-void dummy_display()
-{ }
-
-/****************************************************************************************************/
-
-} // namespace
 
 /****************************************************************************************************/
 
@@ -41,7 +18,7 @@ namespace adobe {
 /****************************************************************************************************/
 
 optional_panel_t::optional_panel_t(const any_regular_t& show_value,
-                                   theme_t              theme) :
+                                   theme_t theme) :
     control_m(show_value, theme),
     inited_m(false)
 { }
@@ -52,18 +29,18 @@ void optional_panel_t::display(const any_regular_t& value)
 {
     assert(show_proc_m && hide_proc_m);
 
-    bool visible (value == control_m.show_value_m);
+    bool visible(value == control_m.show_value_m);
 
     if (inited_m == false)
         control_m.set_visible(visible);
 
     boost::function<void ()> display_proc(boost::bind(&panel_t::set_visible, boost::ref(control_m), visible));
-    boost::function<void ()> dummy_proc(&dummy_display);
+    boost::function<void ()> dummy_proc([](){});
 
     if (visible)
-        show_proc_m(inited_m ? display_proc : dummy_display);
+        show_proc_m(inited_m ? display_proc : dummy_proc);
     else
-        hide_proc_m(inited_m ? display_proc : dummy_display);
+        hide_proc_m(inited_m ? display_proc : dummy_proc);
 
     inited_m = true;
 }

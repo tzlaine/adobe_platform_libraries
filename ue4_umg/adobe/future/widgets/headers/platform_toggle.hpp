@@ -34,6 +34,10 @@ struct toggle_t
 
     typedef boost::gil::rgba8_image_t image_type;
 
+#if 1 // TODO
+    typedef void* texture_type;
+#endif
+
     toggle_t(const std::string&  alt_text,
              const any_regular_t value_on,
              const image_type&   image_on,
@@ -63,11 +67,9 @@ struct toggle_t
     setter_type                setter_proc_m;
     any_regular_t              value_on_m;
     any_regular_t              last_m;
-#if 0 // TODO
-    HBITMAP                    bitmap_on_m;
-    HBITMAP                    bitmap_off_m;
-    HBITMAP                    bitmap_disabled_m;
-#endif
+    texture_type               texture_on_m;
+    texture_type               texture_off_m;
+    texture_type               texture_disabled_m;
 #endif
 };
 

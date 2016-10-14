@@ -34,8 +34,8 @@ struct tab_group_t : boost::noncopyable
     typedef boost::function<void (const any_regular_t&)> tab_group_value_proc_t;
 
     struct tab_t {
-        std::string             name_m;
-        any_regular_t    value_m;
+        std::string name_m;
+        any_regular_t value_m;
     };
 
     typedef std::vector<tab_t>  tab_set_t;
@@ -43,7 +43,7 @@ struct tab_group_t : boost::noncopyable
     tab_group_t(const tab_t* first, const tab_t* last, theme_t theme);
 
 
-#if 0 // TODO
+#if 1 // TODO
     void        initialize(platform_display_type parent);
 #endif
 
@@ -60,9 +60,9 @@ struct tab_group_t : boost::noncopyable
 #if 1 // TODO
     platform_control_type control_m;
 #endif
-    theme_t          theme_m;
-    tab_group_value_proc_t  value_proc_m;
-    tab_set_t               items_m;
+    theme_t theme_m;
+    tab_group_value_proc_t value_proc_m;
+    tab_set_t items_m;
 };
 
 /****************************************************************************************************/

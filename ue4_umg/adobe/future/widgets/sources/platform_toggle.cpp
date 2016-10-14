@@ -7,13 +7,6 @@
 
 #include <adobe/future/widgets/headers/platform_toggle.hpp>
 
-#include <windows.h>
-#include <uxtheme.h>
-#include <tmschema.h>
-#define SCHEME_STRINGS 1
-#include <tmschema.h> //Yes, we include this twice -- read the top of the file
-
-#include <adobe/future/windows_graphic_utils.hpp>
 #include <adobe/future/widgets/headers/button_helper.hpp>
 #include <adobe/future/widgets/headers/display.hpp>
 #include <adobe/future/widgets/headers/widget_utils.hpp>
@@ -24,9 +17,23 @@ namespace {
 
 /****************************************************************************************************/
 
+adobe::toggle_t::texture_type to_texture(adobe::toggle_t::image_type const & image)
+{
+    return adobe::toggle_t::texture_type(); // TODO
+}
+
+/****************************************************************************************************/
+
+bool enabled(adobe::platform_control_type control)
+{
+    return false; // TODO
+}
+
+/****************************************************************************************************/
+
 const adobe::toggle_t::image_type& current_image(adobe::toggle_t& toggle)
 {
-    if (::IsWindowEnabled(toggle.control_m))
+    if (enabled(toggle.control_m))
     {
         if (toggle.last_m == toggle.value_on_m)
             return toggle.image_on_m;
@@ -41,23 +48,24 @@ const adobe::toggle_t::image_type& current_image(adobe::toggle_t& toggle)
 
 /****************************************************************************************************/
 
-HBITMAP current_bitmap(adobe::toggle_t& toggle)
+adobe::toggle_t::texture_type current_texture(adobe::toggle_t& toggle)
 {
-    if (::IsWindowEnabled(toggle.control_m))
+    if (enabled(toggle.control_m))
     {
         if (toggle.last_m == toggle.value_on_m)
-            return toggle.bitmap_on_m;
+            return toggle.texture_on_m;
         else
-            return toggle.bitmap_off_m;
+            return toggle.texture_off_m;
     }
     else // disabled_button
     {
-        return toggle.bitmap_disabled_m;
+        return toggle.texture_disabled_m;
     }
 }
 
 /****************************************************************************************************/
 
+/* TODO: Add this functionality in a platform-specific way.
 LRESULT CALLBACK toggle_subclass_proc(HWND     window,
                                       UINT     message,
                                       WPARAM   wParam,
@@ -86,6 +94,7 @@ LRESULT CALLBACK toggle_subclass_proc(HWND     window,
     // nevermind.
     return DefSubclassProc(window, message, wParam, lParam);
 }
+*/
 
 /****************************************************************************************************/
 
@@ -97,12 +106,12 @@ namespace adobe {
 
 /****************************************************************************************************/
 
-toggle_t::toggle_t(const std::string&  alt_text,
+toggle_t::toggle_t(const std::string& alt_text,
                    const any_regular_t value_on,
-                   const image_type&   image_on,
-                   const image_type&   image_off,
-                   const image_type&   image_disabled,
-                   theme_t             theme) :
+                   const image_type& image_on,
+                   const image_type& image_off,
+                   const image_type& image_disabled,
+                   theme_t theme) :
     control_m(0),
     theme_m(theme),
     alt_text_m(alt_text),
@@ -110,9 +119,9 @@ toggle_t::toggle_t(const std::string&  alt_text,
     image_off_m(image_off),
     image_disabled_m(image_disabled),
     value_on_m(value_on),
-    bitmap_on_m(to_bitmap(image_on)),
-    bitmap_off_m(to_bitmap(image_off)),
-    bitmap_disabled_m(to_bitmap(image_disabled))
+    texture_on_m(to_texture(image_on)),
+    texture_off_m(to_texture(image_off)),
+    texture_disabled_m(to_texture(image_disabled))
 { }
 
 /****************************************************************************************************/
@@ -142,9 +151,9 @@ void toggle_t::enable(bool make_enabled)
 {
     assert(control_m);
 
-    EnableWindow(control_m, make_enabled);
+    set_control_enabled(control_m, make_enabled);
 
-    ::SendMessage(control_m, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM) current_bitmap(*this));
+    // TODO ::SendMessage(control_m, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM) current_bitmap(*this));
 }
 
 /****************************************************************************************************/
@@ -158,7 +167,7 @@ void toggle_t::display(const any_regular_t& to_value)
 
     last_m = to_value;
 
-    ::SendMessage(control_m, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM) current_bitmap(*this));
+    // TODO ::SendMessage(control_m, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM) current_bitmap(*this));
 }
 
 /****************************************************************************************************/
@@ -173,12 +182,13 @@ void toggle_t::monitor(const setter_type& proc)
 /****************************************************************************************************/
 
 template <>
-platform_display_type insert<toggle_t>(display_t&             display,
+platform_display_type insert<toggle_t>(display_t& display,
                                        platform_display_type& parent,
-                                       toggle_t&              element)
+                                       toggle_t& element)
 {
     assert(!element.control_m);
 
+    /* TODO
     element.control_m = ::CreateWindowExW(  WS_EX_COMPOSITED | WS_EX_TRANSPARENT, L"STATIC",
                                     NULL,
                                     WS_CHILD | WS_VISIBLE | SS_BITMAP | SS_NOTIFY,
@@ -194,6 +204,7 @@ platform_display_type insert<toggle_t>(display_t&             display,
     set_font(element.control_m, EP_EDITTEXT); // REVISIT (fbrereto) : a better type?
 
     ::SetWindowSubclass(element.control_m, &toggle_subclass_proc, reinterpret_cast<UINT_PTR>(&element), 0);
+    */
 
     if (!element.alt_text_m.empty())
         implementation::set_control_alt_text(element.control_m, element.alt_text_m);
