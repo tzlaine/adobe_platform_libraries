@@ -1,55 +1,59 @@
 set(sources
     dictionary_set.cpp
+#    expression_formatter.cpp
+#    formatter_tokens.cpp
     keyboard.cpp
+#    layout_formatter.cpp
+#    property_model_formatter.cpp
     sequence_model.cpp
 
-#    ../adobe/future/source/drag_and_drop.cpp
-    ../adobe/future/source/cursor_stack.cpp
-    ../adobe/future/source/modal_dialog_interface.cpp
     ../adobe/future/source/behavior.cpp
     ../adobe/future/source/cmd_system.cpp
+    ../adobe/future/source/cursor_stack.cpp
+#    ../adobe/future/source/drag_and_drop.cpp
     ../adobe/future/source/image_slurp.cpp
-    ../adobe/future/source/resources.cpp
-    ../adobe/future/source/menu_system.cpp
     ../adobe/future/source/locale.cpp
+    ../adobe/future/source/menu_system.cpp
+    ../adobe/future/source/modal_dialog_interface.cpp
+    ../adobe/future/source/resources.cpp
 
-    ../adobe/future/widgets/sources/slider_factory.cpp
-    ../adobe/future/widgets/sources/default_factory.cpp
-    ../adobe/future/widgets/sources/checkbox_factory.cpp
-    ../adobe/future/widgets/sources/group_factory.cpp
-    ../adobe/future/widgets/sources/label_factory.cpp
-    ../adobe/future/widgets/sources/button_factory.cpp
-    ../adobe/future/widgets/sources/window_server.cpp
-    ../adobe/future/widgets/sources/popup_factory.cpp
-    ../adobe/future/widgets/sources/edit_text_factory.cpp
-    ../adobe/future/widgets/sources/progress_bar_factory.cpp
-    ../adobe/future/widgets/sources/separator_factory.cpp
-    ../adobe/future/widgets/sources/edit_number.cpp
-    ../adobe/future/widgets/sources/widget_utils.cpp
     ../adobe/future/widgets/sources/alert.cpp
-    ../adobe/future/widgets/sources/presets_factory.cpp
-    ../adobe/future/widgets/sources/widget_factory.cpp
-    ../adobe/future/widgets/sources/optional_panel_factory.cpp
-    ../adobe/future/widgets/sources/edit_number_factory.cpp
-    ../adobe/future/widgets/sources/image_factory.cpp
-    ../adobe/future/widgets/sources/tab_group_factory.cpp
-    ../adobe/future/widgets/sources/display_number_factory.cpp
-    ../adobe/future/widgets/sources/widget_tokens.cpp
-    ../adobe/future/widgets/sources/reveal_factory.cpp
-    ../adobe/future/widgets/sources/window_factory.cpp
-    ../adobe/future/widgets/sources/toggle_factory.cpp
-    ../adobe/future/widgets/sources/widget_factory_registry.cpp
-    ../adobe/future/widgets/sources/preview_factory.cpp
-    ../adobe/future/widgets/sources/panel_factory.cpp
-    ../adobe/future/widgets/sources/sublayout.cpp
-    ../adobe/future/widgets/sources/control_button_factory.cpp
-    ../adobe/future/widgets/sources/control_button.cpp
-    ../adobe/future/widgets/sources/radio_button_factory.cpp
-    ../adobe/future/widgets/sources/presets_common.cpp
-    ../adobe/future/widgets/sources/link_factory.cpp
+    ../adobe/future/widgets/sources/button_factory.cpp
     ../adobe/future/widgets/sources/button_helper.cpp
+    ../adobe/future/widgets/sources/checkbox_factory.cpp
+    ../adobe/future/widgets/sources/control_button.cpp
+    ../adobe/future/widgets/sources/control_button_factory.cpp
+    ../adobe/future/widgets/sources/default_factory.cpp
+    ../adobe/future/widgets/sources/display_number_factory.cpp
+    ../adobe/future/widgets/sources/edit_number.cpp
+    ../adobe/future/widgets/sources/edit_number_factory.cpp
+    ../adobe/future/widgets/sources/edit_text_factory.cpp
+    ../adobe/future/widgets/sources/group_factory.cpp
+    ../adobe/future/widgets/sources/image_factory.cpp
+    ../adobe/future/widgets/sources/label_factory.cpp
+    ../adobe/future/widgets/sources/link_factory.cpp
     ../adobe/future/widgets/sources/number_unit.cpp
+    ../adobe/future/widgets/sources/optional_panel_factory.cpp
+    ../adobe/future/widgets/sources/panel_factory.cpp
+    ../adobe/future/widgets/sources/popup_factory.cpp
+    ../adobe/future/widgets/sources/presets_common.cpp
+    ../adobe/future/widgets/sources/presets_factory.cpp
+    ../adobe/future/widgets/sources/preview_factory.cpp
+    ../adobe/future/widgets/sources/progress_bar_factory.cpp
+    ../adobe/future/widgets/sources/radio_button_factory.cpp
+    ../adobe/future/widgets/sources/reveal_factory.cpp
+    ../adobe/future/widgets/sources/separator_factory.cpp
+    ../adobe/future/widgets/sources/slider_factory.cpp
+    ../adobe/future/widgets/sources/sublayout.cpp
+    ../adobe/future/widgets/sources/tab_group_factory.cpp
+    ../adobe/future/widgets/sources/toggle_factory.cpp
     ../adobe/future/widgets/sources/virtual_machine_extension.cpp
+    ../adobe/future/widgets/sources/widget_factory.cpp
+    ../adobe/future/widgets/sources/widget_factory_registry.cpp
+    ../adobe/future/widgets/sources/widget_tokens.cpp
+    ../adobe/future/widgets/sources/widget_utils.cpp
+    ../adobe/future/widgets/sources/window_factory.cpp
+    ../adobe/future/widgets/sources/window_server.cpp
 
     ../ue4_umg/adobe/future/source/platform_file_monitor_impl.cpp
     ../ue4_umg/adobe/future/source/platform_locale_data.cpp
