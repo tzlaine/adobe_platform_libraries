@@ -24,63 +24,6 @@
 #include <adobe/keyboard.hpp>
 #include <adobe/xstring.hpp>
 
-#if ADOBE_PLATFORM_WIN
-    #define WINDOWS_LEAN_AND_MEAN 1
-
-    #include <windows.h>
-#elif ADOBE_PLATFORM_MAC
-    #include <adobe/macintosh_memory.hpp>
-    #include <adobe/future/macintosh_events.hpp>
-#endif
-
-/****************************************************************************************************/
-
-namespace {
-
-/****************************************************************************************************/
-
-#if ADOBE_PLATFORM_MAC
-
-struct raw_key_handler_t
-{
-    raw_key_handler_t()
-    {
-        handler_m.monitor_proc_m = boost::bind(&raw_key_handler_t::handle_event,
-                                               boost::ref(*this), _1, _2);
-    }
-
-    ::OSStatus handle_event(::EventHandlerCallRef /*next*/,
-                            ::EventRef            event)
-    {
-        char key_code(0);
-
-        adobe::get_event_parameter<kEventParamKeyMacCharCodes>(event, key_code, typeChar);
-
-        bool handled =
-            adobe::keyboard_t::get().dispatch(key_code,
-                                              true,
-                                              adobe::modifiers_none_s,
-                                              adobe::any_regular_t(window_m));
-
-        // Compiler does like return handled ? noErr : eventNotHandledErr
-        // (anonymous enum types don't match)
-
-        if (handled)
-            return noErr;
-        else
-            return eventNotHandledErr;
-    }
-
-    adobe::event_handler_t handler_m;
-    ::WindowRef            window_m;
-};
-
-#endif
-
-/****************************************************************************************************/
-
-} // namespace
-
 /****************************************************************************************************/
 
 namespace adobe {
@@ -137,26 +80,6 @@ std::string mdi_error_getline(std::istream& layout_definition, name_t, std::stre
 /****************************************************************************************************/
 
 } // namespace adobe
-
-/****************************************************************************************************/
-
-namespace {
-
-/****************************************************************************************************/
-#if ADOBE_PLATFORM_MAC
-pascal void purge_closed_windows(::EventLoopTimerRef /*inTimer*/,
-                                 void*               data)
-{
-    assert(data);
-
-    adobe::modal_dialog_t& mdi(*reinterpret_cast<adobe::modal_dialog_t*>(data));
-
-    mdi.end_dialog();
-}
-#endif
-/****************************************************************************************************/
-
-} // namespace
 
 /****************************************************************************************************/
 
@@ -280,38 +203,7 @@ dialog_result_t modal_dialog_t::go(std::istream& layout, std::istream& sheet)
         view_m->eve_m.evaluate(eve_t::evaluate_nested);
         view_m->show_window_m();
 
-#if ADOBE_PLATFORM_MAC
-
-        HIViewRef                            cntl(view_m->root_display_m);
-        WindowRef                            owner(::GetControlOwner(cntl));
-        auto_resource< ::EventLoopTimerUPP > loop_upp(::NewEventLoopTimerUPP(purge_closed_windows));
-        auto_resource< ::EventLoopTimerRef > idle_timer_ref;
-        ::EventLoopTimerRef                  temp_timer_ref;
-    
-        if (::InstallEventLoopTimer(::GetMainEventLoop(),
-                                    1,
-                                    .01,
-                                    loop_upp.get(),
-                                    this,
-                                    &temp_timer_ref) != noErr)
-            throw std::runtime_error("InstallEventLoopTimer");     
-
-        idle_timer_ref.reset(temp_timer_ref);
-
-        raw_key_handler_t keyboard_event_monitor;
-
-        keyboard_event_monitor.window_m = owner;
-        keyboard_event_monitor.handler_m.insert(kEventClassKeyboard, kEventRawKeyDown);
-//        keyboard_event_monitor.handler_m.insert(kEventClassKeyboard, kEventRawKeyUp);
-        keyboard_event_monitor.handler_m.install(::GetApplicationEventTarget());
-
-        ::ShowWindow(owner);
-        ::ActivateWindow(owner, true);
-        ::BringToFront(owner);
-
-        ::RunAppModalLoopForWindow(owner);
-
-#elif ADOBE_PLATFORM_WIN
+#if ADOBE_PLATFORM_WIN
 
         /* TODO
         HWND cntl(view_m->root_display_m);
@@ -355,7 +247,6 @@ dialog_result_t modal_dialog_t::go(std::istream& layout, std::istream& sheet)
         }
         */
 #endif
-
         result_m.display_state_m = view_m->layout_sheet_m.contributing();
 
         view_m.reset(0);
@@ -372,16 +263,10 @@ bool modal_dialog_t::end_dialog()
     if (defer_view_close_m == false)
         return false;
 
-#if ADOBE_PLATFORM_MAC
+#if ADOBE_PLATFORM_WIN
 
-    HIViewRef cntl(view_m->root_display_m);
-    WindowRef owner(::GetControlOwner(cntl));
-
-    ::QuitAppModalLoopForWindow(owner);
-
-#elif ADOBE_PLATFORM_WIN
-
-    ::PostQuitMessage(0);
+    // TODO: This can probably just go away.
+    // TODO ::PostQuitMessage(0);
 
 #endif
 
