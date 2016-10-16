@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/file_monitor.hpp>
 
 #include <adobe/algorithm/find.hpp>
@@ -144,7 +148,7 @@ void file_monitor_platform_data_t::connect()
 
     last_write_m = boost::filesystem::last_write_time(path_m);
 
-    std::string change_handle_path(path_m.branch_path().native());
+    auto const change_handle_path = path_m.branch_path().native();
 
     // TODO: FindFirstChangeNotificationA
 }

@@ -5,6 +5,10 @@
 */
 /**************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #define ADOBE_CLOSED_HASH_MAP_INDEX 1
 
 #include <adobe/future/widgets/headers/platform_presets.hpp>
@@ -62,7 +66,7 @@ void presets_once()
 /**************************************************************************************************/
 
 inline bool always_break(adobe::name_t, const adobe::any_regular_t&)
-    { return true; }
+{ return true; }
 
 /**************************************************************************************************/
 

@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #define ADOBE_DLL_SAFE 0
 
 #include <adobe/future/platform_primitives.hpp>

@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <windows.h>
 
 #include <tmschema.h>

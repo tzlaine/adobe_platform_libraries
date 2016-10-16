@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #define ADOBE_DLL_SAFE 0
 
 // .hpp needs to come before widget_factory to hook the overrides

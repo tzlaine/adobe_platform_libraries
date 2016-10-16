@@ -5,6 +5,10 @@
 */
 /**************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/drag_and_drop.hpp>
 
 #include <utility>

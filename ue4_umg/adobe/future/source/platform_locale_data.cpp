@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/platform_locale_data.hpp>
 
 #include <adobe/future/locale.hpp>

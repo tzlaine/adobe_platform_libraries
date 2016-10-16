@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 // optional_panel.hpp needs to come before widget_factory to hook the overrides
 #include <adobe/future/widgets/headers/platform_optional_panel.hpp>
 

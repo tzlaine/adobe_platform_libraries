@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/widgets/headers/platform_label.hpp>
 
 #include <adobe/future/widgets/headers/factory.hpp>

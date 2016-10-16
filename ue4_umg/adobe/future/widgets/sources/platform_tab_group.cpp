@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/algorithm.hpp>
 
 #include <adobe/future/widgets/headers/platform_tab_group.hpp>

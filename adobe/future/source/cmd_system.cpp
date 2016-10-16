@@ -5,6 +5,10 @@
 */
 /*************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/cmd_system.hpp>
 
 #include <boost/signals2.hpp>

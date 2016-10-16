@@ -5,6 +5,10 @@
 */
 /*************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/adam.hpp>
 #include <adobe/array.hpp>
 #include <adobe/cmath.hpp>
@@ -26,16 +30,16 @@
 #include <adobe/future/widgets/headers/group_factory.hpp>
 #include <adobe/future/widgets/headers/image_factory.hpp>
 #include <adobe/future/widgets/headers/label_factory.hpp>
-#include <adobe/future/widgets/headers/link_factory.hpp>
+// TODO #include <adobe/future/widgets/headers/link_factory.hpp>
 #include <adobe/future/widgets/headers/optional_panel_factory.hpp>
 #include <adobe/future/widgets/headers/panel_factory.hpp>
 #include <adobe/future/widgets/headers/popup_factory.hpp>
-#include <adobe/future/widgets/headers/presets_factory.hpp>
-#include <adobe/future/widgets/headers/preview_factory.hpp>
+// TODO #include <adobe/future/widgets/headers/presets_factory.hpp>
+// TODO #include <adobe/future/widgets/headers/preview_factory.hpp>
 #include <adobe/future/widgets/headers/progress_bar_factory.hpp>
 #include <adobe/future/widgets/headers/radio_button_factory.hpp>
 #include <adobe/future/widgets/headers/reveal_factory.hpp>
-#include <adobe/future/widgets/headers/separator_factory.hpp>
+// TODO #include <adobe/future/widgets/headers/separator_factory.hpp>
 #include <adobe/future/widgets/headers/slider_factory.hpp>
 #include <adobe/future/widgets/headers/tab_group_factory.hpp>
 #include <adobe/future/widgets/headers/toggle_factory.hpp>
@@ -251,16 +255,16 @@ const widget_factory_t& default_asl_widget_factory()
         default_factory_s.reg(name_image, &implementation::make_image_hack);
         default_factory_s.reg(name_toggle, &make_toggle);
         default_factory_s.reg(name_label, &implementation::make_label_hack);
-        default_factory_s.reg(name_link, &make_link, false, link_layout_attributes());
+        // TODO default_factory_s.reg(name_link, &make_link, false, link_layout_attributes());
         default_factory_s.reg(name_optional, &make_optional_panel, true, optional_panel_layout_attributes());
         default_factory_s.reg(name_panel, &make_panel, true, panel_layout_attributes());
         default_factory_s.reg(name_popup, &make_popup);
-        default_factory_s.reg(name_preset, &make_presets);
-        default_factory_s.reg(name_preview, &make_preview);
+        // TODO default_factory_s.reg(name_preset, &make_presets);
+        // TODO default_factory_s.reg(name_preview, &make_preview);
         default_factory_s.reg(name_progress_bar, &make_progress_bar);
         default_factory_s.reg(name_radio_button, &make_radio_button);
         default_factory_s.reg(name_reveal, &make_reveal);
-        default_factory_s.reg(name_separator, &make_separator, false, separator_layout_attributes());
+        // TODO default_factory_s.reg(name_separator, &make_separator, false, separator_layout_attributes());
         default_factory_s.reg(name_slider, &make_slider);
         default_factory_s.reg(name_static_text, &implementation::make_label_hack);
         default_factory_s.reg(name_tab_group, &make_tab_group, true, tab_group_layout_attributes());

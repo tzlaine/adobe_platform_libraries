@@ -193,7 +193,7 @@ void read_rle_pixels(Image&         img,
 
 		stream(rle_header);
 
-		if (rle_header & char(0x80)) // rle compressed data flag check
+		if (rle_header & (unsigned char)0x80) // rle compressed data flag check
 		{
 		    num_pixels = (rle_header & 0x7f) + 1;
 

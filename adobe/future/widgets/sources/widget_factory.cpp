@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/widgets/headers/widget_tokens.hpp>
 
 #include <adobe/future/widgets/headers/factory.hpp>

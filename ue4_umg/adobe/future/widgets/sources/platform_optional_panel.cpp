@@ -6,6 +6,10 @@
 /****************************************************************************************************/
 
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/widgets/headers/platform_optional_panel.hpp>
 #include <adobe/future/widgets/headers/display.hpp>
 

@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #define ADOBE_DLL_SAFE 0
 
 #include <adobe/config.hpp>
@@ -309,6 +313,7 @@ dialog_result_t modal_dialog_t::go(std::istream& layout, std::istream& sheet)
 
 #elif ADOBE_PLATFORM_WIN
 
+        /* TODO
         HWND cntl(view_m->root_display_m);
 
         MSG  msg;
@@ -348,7 +353,7 @@ dialog_result_t modal_dialog_t::go(std::istream& layout, std::istream& sheet)
 
             end_dialog();
         }
-
+        */
 #endif
 
         result_m.display_state_m = view_m->layout_sheet_m.contributing();

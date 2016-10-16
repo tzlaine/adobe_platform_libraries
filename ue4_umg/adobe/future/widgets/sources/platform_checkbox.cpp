@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/widgets/headers/platform_checkbox.hpp>
 
 #include <adobe/future/widgets/headers/widget_utils.hpp>

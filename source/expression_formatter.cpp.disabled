@@ -5,6 +5,10 @@
 */
 /******************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/config.hpp>
 
 #include <sstream>

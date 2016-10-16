@@ -5,6 +5,10 @@
 */
 /*************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/dictionary_set.hpp>
 
 #include <adobe/algorithm/set.hpp>

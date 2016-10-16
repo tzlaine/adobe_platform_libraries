@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/widgets/headers/button_helper.hpp>
 
 // REVISIT (fbrereto) : This source file should not reach into widgets

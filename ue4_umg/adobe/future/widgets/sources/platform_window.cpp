@@ -5,6 +5,10 @@
 */
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/widgets/headers/platform_window.hpp>
 
 #include <adobe/future/widgets/headers/display.hpp>
@@ -143,8 +147,9 @@ window_t::window_t(const std::string&  name,
 
 window_t::~window_t()
 {
-    if (window_m)
-        ;// TODO ::DestroyWindow(window_m);
+    if (window_m) {
+        // TODO ::DestroyWindow(window_m);
+    }
 
     window_m = 0;
 }

@@ -4,6 +4,11 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 /*************************************************************************************************/
+
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #if 0
 #include <adobe/future/menu_system.hpp>
 #include <adobe/memory.hpp>

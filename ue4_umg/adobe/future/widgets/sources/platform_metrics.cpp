@@ -12,6 +12,10 @@
 
 /****************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/future/widgets/headers/platform_metrics.hpp>
 
 #include <sstream>

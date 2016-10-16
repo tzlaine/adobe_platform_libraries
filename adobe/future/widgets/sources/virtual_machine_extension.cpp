@@ -6,6 +6,10 @@
 
 /**************************************************************************************************/
 
+#ifndef BUILD_FOR_TEST
+#include "Spaceport.h"
+#endif
+
 #include <adobe/config.hpp>
 
 #define ADOBE_DLL_SAFE 0
