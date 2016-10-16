@@ -1,3 +1,5 @@
+From the forked stlab repo:
+
 Adobe Platform Libraries
 =====
 
@@ -5,7 +7,6 @@ This started out as a fork from Adobe's original ASL Perforce server, but has si
 
 If you're trying to build this without the Adobe Source Libraries, you're going to have a bad time.
 
-Build Status: [![Build status](https://travis-ci.org/stlab/adobe_platform_libraries.png?branch=master)](https://travis-ci.org/stlab/adobe_platform_libraries)
-=====
+About this repo:
 
-We use [Travis CI](https://travis-ci.org/stlab/adobe_platform_libraries) to validate APL's build state. A build consists of building Adobe Begin with xcodebuild in debug mode.
+This fork was made to adapt the Adobe Platform Libraries to use in Unreal Engine 4 UMG UIs.  The Windows and Mac implementations have been removed.
