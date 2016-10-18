@@ -30,14 +30,13 @@ void create_widget(const dictionary_t& parameters,
     std::string    alt_text;
     any_regular_t true_value(true);
     any_regular_t false_value(false);
-    theme_t theme(implementation::size_to_theme(size));
 
     get_value(parameters, key_name, name);
     get_value(parameters, key_alt_text, alt_text);
     get_value(parameters, key_value_on, true_value);
     get_value(parameters, key_value_off, false_value);
 
-    checkbox = new checkbox_t(name, true_value, false_value, theme, alt_text);
+    checkbox = new checkbox_t(name, true_value, false_value, alt_text);
 }
 
 /****************************************************************************************************/

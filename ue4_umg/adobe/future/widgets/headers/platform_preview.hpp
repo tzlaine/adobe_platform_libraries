@@ -42,8 +42,7 @@ struct preview_t
     typedef boost::function<void (const controller_model_type&)> setter_proc_type;
 
     /// constructor for this widget
-    preview_t(const std::string& alt_text,
-              theme_t            theme);
+    preview_t(const std::string& alt_text);
 
     /*!
         @name Placeable Concept Operations
@@ -103,7 +102,6 @@ struct preview_t
     view_model_type            preview_image_m;
     std::string                alt_text_m;
     sublayout_t                sublayout_m;
-    theme_t                    theme_m;
 #endif
 };
 

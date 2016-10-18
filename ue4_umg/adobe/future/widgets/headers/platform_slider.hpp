@@ -38,8 +38,7 @@ struct slider_t : boost::noncopyable
              bool                        is_vertical,
              slider_style_t              style,
              std::size_t                 num_ticks,
-             const value_range_format_t& format,
-             theme_t                     theme);
+             const value_range_format_t& format);
 
     void measure(extents_t& result);
 
@@ -60,7 +59,6 @@ struct slider_t : boost::noncopyable
     slider_style_t       style_m;
     std::size_t          num_ticks_m;
     value_range_format_t format_m;
-    theme_t       theme_m;
     setter_type          value_proc_m;
     long                 last_m; // Used to debounce
     model_type           value_m;

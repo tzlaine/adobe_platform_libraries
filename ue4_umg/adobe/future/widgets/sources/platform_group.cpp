@@ -24,12 +24,10 @@ namespace adobe {
 /****************************************************************************************************/
 
 group_t::group_t(const std::string& name,
-                 const std::string& alt_text,
-                 theme_t theme) :
+                 const std::string& alt_text) :
     control_m(),
     name_m(name),
-    alt_text_m(alt_text),
-    theme_m(theme)
+    alt_text_m(alt_text)
 { }
 
 /****************************************************************************************************/
@@ -48,7 +46,7 @@ void group_t::measure(extents_t& result)
 
     // REVISIT (fbrereto) : A lot of static metrics values added here
 
-    // TODO result = measure_text(name_m, theme_m, ::GetParent(control_m));
+    // TODO result = measure_text(name_m, ::GetParent(control_m));
 
     result.width() += 15;
 

@@ -29,8 +29,6 @@ void create_widget(const dictionary_t&   parameters,
 {
     edit_text_ctor_block_t block;
 
-    block.theme_m = implementation::size_to_theme(size);
-
     get_value(parameters, key_name, block.name_m);
     get_value(parameters, key_alt_text, block.alt_text_m);
     get_value(parameters, key_characters, block.min_characters_m);

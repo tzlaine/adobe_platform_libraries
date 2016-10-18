@@ -28,7 +28,7 @@ struct panel_t : extents_slices_t, boost::noncopyable
 {
     typedef any_regular_t model_type;
 
-    panel_t(const any_regular_t& show_value, theme_t theme);
+    panel_t(const any_regular_t& show_value);
 
     void        measure(extents_t& result);
 
@@ -41,7 +41,6 @@ struct panel_t : extents_slices_t, boost::noncopyable
 #if 1 // TODO
     platform_display_type control_m;
 #endif
-    theme_t          theme_m;
     any_regular_t    show_value_m;
 };
 

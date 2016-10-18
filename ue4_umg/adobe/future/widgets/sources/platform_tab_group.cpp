@@ -65,10 +65,8 @@ LRESULT CALLBACK tab_group_subclass_proc(HWND     window,
 /****************************************************************************************************/
 
 tab_group_t::tab_group_t(const tab_t* first,
-                         const tab_t* last,
-                         theme_t theme) :
+                         const tab_t* last) :
     control_m(),
-    theme_m(theme),
     value_proc_m(),
     items_m(first, last)
 { }
@@ -121,7 +119,7 @@ void tab_group_t::measure(extents_t& result)
     for (tab_set_t::iterator first(items_m.begin()), last(items_m.end()); first != last; ++first)
     {
         extents_t attrs;
-        // TODO measure_label_text(label_t(first->name_m, std::string(), 0, theme_m), attrs, ::GetParent(control_m));
+        // TODO measure_label_text(label_t(first->name_m, std::string(), 0), attrs, ::GetParent(control_m));
 
         result.width() += attrs.width() + 18;
         result.height() = (std::max)(result.height(), attrs.height());

@@ -29,13 +29,12 @@ void create_widget(const dictionary_t&  parameters,
     std::string             name;
     std::string             alt_text;
     any_regular_t    show_value(true);
-    theme_t          theme(implementation::size_to_theme(size));
 
     get_value(parameters, key_value_on, show_value);
     get_value(parameters, key_alt_text, alt_text);
     get_value(parameters, key_name, name);
 
-    widget = new reveal_t(name, show_value, theme, alt_text);
+    widget = new reveal_t(name, show_value, alt_text);
 }
 
 /****************************************************************************************************/

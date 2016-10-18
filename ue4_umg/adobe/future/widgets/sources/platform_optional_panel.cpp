@@ -21,9 +21,8 @@ namespace adobe {
 
 /****************************************************************************************************/
 
-optional_panel_t::optional_panel_t(const any_regular_t& show_value,
-                                   theme_t theme) :
-    control_m(show_value, theme),
+optional_panel_t::optional_panel_t(const any_regular_t& show_value) :
+    control_m(show_value),
     inited_m(false)
 { }
 

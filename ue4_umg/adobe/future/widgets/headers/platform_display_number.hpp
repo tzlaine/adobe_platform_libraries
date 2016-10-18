@@ -36,7 +36,6 @@ struct display_number_t  : boost::noncopyable
                      const std::string& alt_text,
                      ForwardIterator first,
                      ForwardIterator last, 
-                     theme_t theme,
                      int characters);
 
 #if 1 // TODO
@@ -48,7 +47,6 @@ struct display_number_t  : boost::noncopyable
     std::string              name_m;
     std::string              alt_text_m;
     unit_set_t               unit_set_m;
-    theme_t                  theme_m;
     std::wstring::size_type  label_chars_m;
     int                      characters_m;
 
@@ -72,12 +70,10 @@ display_number_t::display_number_t(
     const std::string& alt_text,
     ForwardIterator first,
     ForwardIterator last, 
-    theme_t theme,
     int characters) 
     : name_m(name),
       alt_text_m(alt_text),
       unit_set_m(first, last),
-      theme_m(theme),
       label_chars_m(0),
       characters_m(characters)
 { }

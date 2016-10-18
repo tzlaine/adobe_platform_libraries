@@ -72,15 +72,6 @@ size_enum_t enumerate_size(const name_t& size)
 
 /*************************************************************************************************/
 
-theme_t size_to_theme(size_enum_t size)
-{
-    return size == size_small_s ? theme_small_s :
-           size == size_mini_s  ? theme_mini_s :
-                                  theme_normal_s;
-}
-
-/*************************************************************************************************/
-
 touch_set_t touch_set(const dictionary_t& parameters)
 {
     array_t  touch_set_array;

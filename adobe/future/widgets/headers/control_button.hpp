@@ -28,8 +28,7 @@ struct control_button_t
     control_button_t(const std::string&          name,
                      const std::string&          alt_text,
                      const expression_eval_proc& eval_proc,
-                     const array_t&              expression,
-                     theme_t                     theme);
+                     const array_t&              expression);
 
     /*!
         @name Placeable Concept Operations

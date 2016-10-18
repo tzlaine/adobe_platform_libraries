@@ -26,7 +26,7 @@ namespace adobe {
     
 struct separator_t : boost::noncopyable, extents_slices_t
 {    
-    separator_t(bool is_vertical, theme_t theme);
+    separator_t(bool is_vertical);
     
     void            measure(extents_t& result);
     
@@ -38,7 +38,6 @@ struct separator_t : boost::noncopyable, extents_slices_t
     platform_display_type control_m;
 #endif
     bool            is_vertical_m;
-    theme_t  theme_m;
 };
 
 /****************************************************************************************************/

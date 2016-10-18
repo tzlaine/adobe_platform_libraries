@@ -27,10 +27,8 @@ namespace adobe {
 
 label_t::label_t(const std::string& name,
                  const std::string& alt_text,
-                 std::size_t characters,
-                 theme_t theme) :
+                 std::size_t characters) :
     control_m(),
-    theme_m(theme),
     name_m(name),
     alt_text_m(alt_text),
     characters_m(characters)
@@ -229,9 +227,9 @@ void initialize(label_t& label, platform_display_type parent)
 
 /****************************************************************************************************/
 
-extents_t measure_text(const std::string& text, theme_t theme, platform_display_type temp_parent)
+extents_t measure_text(const std::string& text, platform_display_type temp_parent)
 {
-    label_t label(text, std::string(), 0, theme);
+    label_t label(text, std::string(), 0);
     extents_t result;
 
     measure_label_text(label, result, temp_parent);

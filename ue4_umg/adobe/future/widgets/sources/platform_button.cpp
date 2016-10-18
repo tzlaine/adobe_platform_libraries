@@ -27,10 +27,8 @@ button_t::button_t(bool is_default,
                    bool is_cancel,
                    modifiers_t modifier_mask,
                    const button_state_descriptor_t* first,
-                   const button_state_descriptor_t* last,
-                   theme_t theme) :
+                   const button_state_descriptor_t* last) :
     control_m(),
-    theme_m(theme),
     state_set_m(first, last),
     modifier_mask_m(modifier_mask),
     modifiers_m(modifiers_none_s),
@@ -52,7 +50,7 @@ void button_t::measure(extents_t& result)
     if (state == state_set_m.end())
         state = button_default_state(state_set_m);
 
-    extents_t cur_text_extents(measure_text(state->name_m, theme_m, implementation::get_parent(control_m)));
+    extents_t cur_text_extents(measure_text(state->name_m, implementation::get_parent(control_m)));
 
     result.width() -= cur_text_extents.width();
     result.height() -= cur_text_extents.height();
@@ -62,7 +60,7 @@ void button_t::measure(extents_t& result)
     
     for (button_state_set_t::iterator iter(state_set_m.begin()), last(state_set_m.end()); iter != last; ++iter)
     {
-        extents_t tmp(measure_text(iter->name_m, theme_m, implementation::get_parent(control_m)));
+        extents_t tmp(measure_text(iter->name_m, implementation::get_parent(control_m)));
 
         width_additional = std::max<int>(width_additional, tmp.width());
         height_additional = std::max<int>(height_additional, tmp.height());

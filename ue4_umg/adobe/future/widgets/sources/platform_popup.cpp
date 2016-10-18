@@ -172,11 +172,9 @@ popup_t::popup_t(const std::string& name,
                  const std::string& alt_text,
                  const std::string& custom_item_name,
                  const menu_item_t* first,
-                 const menu_item_t* last,
-                 theme_t theme) :
+                 const menu_item_t* last) :
     control_m(),
-    theme_m(theme),
-    name_m(name, alt_text, 0, theme),
+    name_m(name, alt_text, 0),
     alt_text_m(alt_text),
     static_baseline_m(0),
     static_height_m(0),

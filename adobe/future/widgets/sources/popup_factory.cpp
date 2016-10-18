@@ -31,7 +31,6 @@ void create_widget(const dictionary_t& parameters,
     std::string              alt_text;
     std::string              custom_item_name("Custom");
     array_t           items;
-    theme_t           theme(implementation::size_to_theme(size));
     popup_t::menu_item_set_t item_set;
 
     get_value(parameters, key_name, name);
@@ -52,8 +51,7 @@ void create_widget(const dictionary_t& parameters,
     popup_t::menu_item_set_t::value_type* first_value(item_set.empty() ? 0 : &item_set[0]);
 
     widget = new popup_t(name, alt_text, custom_item_name,
-                       first_value, first_value + item_set.size(),
-                       theme);
+                       first_value, first_value + item_set.size());
 }
 
 /*************************************************************************************************/

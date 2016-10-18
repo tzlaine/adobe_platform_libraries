@@ -38,8 +38,7 @@ void create_widget(const dictionary_t& parameters,
     get_value(parameters, key_alt_text, alt_text);
     get_value(parameters, key_characters, characters);
 
-    widget = new label_t(name, alt_text, characters, 
-                         implementation::size_to_theme(size));
+    widget = new label_t(name, alt_text, characters);
 }
 
 /****************************************************************************************************/

@@ -26,8 +26,8 @@ namespace adobe {
 
 /****************************************************************************************************/
 
-separator_t::separator_t(bool is_vertical, theme_t theme)
-    : control_m(0), is_vertical_m(is_vertical), theme_m(theme)
+separator_t::separator_t(bool is_vertical)
+    : control_m(0), is_vertical_m(is_vertical)
 {
 
 }

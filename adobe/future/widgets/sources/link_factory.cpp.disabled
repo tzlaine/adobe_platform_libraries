@@ -36,8 +36,7 @@ void create_widget(const dictionary_t& parameters,
     get_value(parameters, key_value_off, value_off);
     get_value(parameters, key_count, count);
 
-    widget = new link_t(alt_text, value_on, value_off, count, 
-        implementation::size_to_theme(size));
+    widget = new link_t(alt_text, value_on, value_off, count);
 }
     
 /****************************************************************************************************/

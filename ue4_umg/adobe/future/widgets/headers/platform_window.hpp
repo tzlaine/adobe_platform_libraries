@@ -35,8 +35,7 @@ struct window_t
     window_t(const std::string&  name,
              window_style_t      style,
              window_attributes_t attributes,
-             window_modality_t   modality,
-             theme_t             theme);
+             window_modality_t   modality);
 
     ~window_t();
 
@@ -64,7 +63,6 @@ struct window_t
     window_style_t       style_m;
     window_attributes_t  attributes_m;
     window_modality_t    modality_m;
-    theme_t              theme_m;
     place_data_t         place_data_m;
     window_resize_proc_t resize_proc_m;
     bool                 debounce_m;

@@ -169,15 +169,13 @@ namespace adobe {
 link_t::link_t(const std::string&          alt_text,
                const any_regular_t& on_value,
                const any_regular_t& off_value,
-               long                        count,
-               theme_t                     theme) :
+               long                        count) :
     control_m(0),
     link_icon_m(0),
     alt_text_m(alt_text),
     on_value_m(on_value),
     off_value_m(off_value),
-    count_m(count),
-    theme_m(theme)
+    count_m(count)
 { }
 
 /****************************************************************************************************/

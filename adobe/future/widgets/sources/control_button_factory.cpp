@@ -72,8 +72,7 @@ create_and_hookup_widget<control_button_t, poly_placeable_t>(const dictionary_t&
     widget = new control_button_t(name,
                                   alt_text,
                                   boost::bind(&sheet_t::inspect, boost::ref(token.sheet_m), _1),
-                                  parse_adam_expression(expression_string),
-                                  implementation::size_to_theme(size));
+                                  parse_adam_expression(expression_string));
 
     assemblage_cleanup_ptr(token.client_holder_m.assemblage_m, widget);
 

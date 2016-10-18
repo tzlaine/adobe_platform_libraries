@@ -79,15 +79,13 @@ slider_t::slider_t(const std::string& alt_text,
                    bool is_vertical,
                    slider_style_t style,
                    std::size_t num_ticks,
-                   const value_range_format_t& format,
-                   theme_t theme) :
+                   const value_range_format_t& format) :
     control_m(),
     alt_text_m(alt_text),
     is_vertical_m(is_vertical),
     style_m(style),
     num_ticks_m(num_ticks),
-    format_m(format),
-    theme_m(theme)
+    format_m(format)
 { }
 
 /****************************************************************************************************/

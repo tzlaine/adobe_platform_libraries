@@ -33,8 +33,7 @@ struct optional_panel_t : boost::noncopyable
     typedef any_regular_t model_type;
     typedef boost::function<void (const boost::function<void ()>&)> optional_display_proc_t;
 
-                        optional_panel_t(const any_regular_t& show_value,
-                                         theme_t              theme);
+                        optional_panel_t(const any_regular_t& show_value);
 
     void                measure(extents_t& result);
 

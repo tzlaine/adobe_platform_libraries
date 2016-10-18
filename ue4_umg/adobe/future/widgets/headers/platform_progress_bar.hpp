@@ -64,8 +64,7 @@ struct progress_bar_t : boost::noncopyable
                                bool is_vertical,
                                const value_range_format_t& format,
                                unsigned long min,
-                               unsigned long max,
-                               theme_t theme);
+                               unsigned long max);
    
     void        measure(extents_t& result);
     void        place(const place_data_t& place_data);
@@ -90,7 +89,6 @@ private:
     double                      last_m;
     double                      value_m;
     value_range_format_t format_m;
-    theme_t              theme_m;
 };
 
 /****************************************************************************************************/

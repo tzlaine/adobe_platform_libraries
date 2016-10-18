@@ -55,7 +55,6 @@ namespace adobe {
 //view
     void              display(const model_type&);
 
-    void			  set_theme(theme_t theme);
     void              set_field_text(const std::string& text);
     void              set_static_disabled(bool is_static_disabled);
     void              set_selection(long start_char, long end_char);
@@ -71,7 +70,6 @@ namespace adobe {
 #if 1 // TODO
     platform_display_type control_m;
 #endif
-    theme_t                    theme_m;
     label_t                    name_m;
     std::string                alt_text_m;
     std::wstring               field_text_m;

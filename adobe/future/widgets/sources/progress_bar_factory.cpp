@@ -46,12 +46,11 @@ void create_widget(const dictionary_t& parameters,
     if (is_relevance)           bar_theme = pb_style_relevance_bar_s;
     else if (is_indeterminate)  bar_theme = pb_style_indeterminate_bar_s;
 
-    widget = new progress_bar_t(bar_theme, 
-                              is_vertical, 
-                              format, 
-                              0,
-                              (unsigned long)format.size(),
-                              implementation::size_to_theme(size));
+    widget = new progress_bar_t(bar_theme,
+                                is_vertical,
+                                format,
+                                0,
+                                (unsigned long)format.size());
 }
 
 /*************************************************************************************************/

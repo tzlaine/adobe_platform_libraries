@@ -32,7 +32,6 @@ struct reveal_t : boost::noncopyable
 
     reveal_t(const std::string& name,
              const any_regular_t& show_value,
-             theme_t theme,
              const std::string& alt_text);
 
 #if 1 // TODO
@@ -50,7 +49,6 @@ struct reveal_t : boost::noncopyable
 #if 1 // TODO
     platform_display_type control_m;
 #endif
-    theme_t          theme_m;
     label_t			name_m;
     bool                    using_label_m;
     setter_type				hit_proc_m;

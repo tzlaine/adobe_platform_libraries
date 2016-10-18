@@ -35,8 +35,7 @@ struct radio_button_t
 
     radio_button_t(const std::string&          name,
                    const std::string&          alt_text,
-                   const any_regular_t& set_value,
-                   theme_t              theme);
+                   const any_regular_t& set_value);
 
     void measure(extents_t& result);
 
@@ -54,7 +53,6 @@ struct radio_button_t
     std::string          name_m;
     std::string          alt_text_m;
     any_regular_t set_value_m;
-    theme_t       theme_m;
     setter_type          hit_proc_m;
     any_regular_t last_m;
 };

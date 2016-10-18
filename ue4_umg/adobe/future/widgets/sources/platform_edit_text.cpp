@@ -78,7 +78,7 @@ void edit_text_t::initialize(platform_display_type parent)
 /****************************************************************************************************/
 
 edit_text_t::edit_text_t(const edit_text_ctor_block_t& block) : 
-    name_m(block.name_m, block.alt_text_m, 0, block.theme_m),
+    name_m(block.name_m, block.alt_text_m, 0),
     alt_text_m(block.alt_text_m),
     field_text_m(),
     using_label_m(!block.name_m.empty()),
@@ -212,15 +212,6 @@ void edit_text_t::enable(bool active)
 
     if (using_label_m)
         enable(get_label(), active);
-}
-
-/****************************************************************************************************/
-
-void edit_text_t::set_theme(theme_t theme)
-{
-    theme_m = theme;
-
-    // TODO set_font(control_m, EP_EDITTEXT);
 }
 
 /****************************************************************************************************/

@@ -31,7 +31,6 @@ void create_widget(const dictionary_t&       parameters,
 {
     std::string name;
     std::string alt_text;
-    theme_t     theme(implementation::size_to_theme(size));
     long        characters(5);
     unit_t      default_unit(to_unit(parameters));
 
@@ -55,7 +54,7 @@ void create_widget(const dictionary_t&       parameters,
     }
 
     display_number = new display_number_t(name, alt_text, unit_set.begin(),
-                                          unit_set.end(), theme, characters);
+                                          unit_set.end(), characters);
 }
 
 /*************************************************************************************************/

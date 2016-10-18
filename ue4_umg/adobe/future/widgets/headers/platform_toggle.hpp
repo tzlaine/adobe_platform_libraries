@@ -42,8 +42,7 @@ struct toggle_t
              const any_regular_t value_on,
              const image_type&   image_on,
              const image_type&   image_off,
-             const image_type&   image_disabled,
-             theme_t             theme);
+             const image_type&   image_disabled);
 
     void measure(extents_t& result);
 
@@ -59,7 +58,6 @@ struct toggle_t
 #if 1 // TODO
     platform_display_type control_m;
 #endif
-    theme_t                    theme_m;
     std::string                alt_text_m;
     image_type                 image_on_m;
     image_type                 image_off_m;

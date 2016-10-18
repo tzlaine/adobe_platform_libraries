@@ -24,16 +24,13 @@ namespace adobe {
 
         label_t(const std::string& name, 
                 const std::string& alt_text, 
-                std::size_t        characters,
-                theme_t            theme
-                );
+                std::size_t        characters);
 
         ~label_t();
 
 #if 1 // TODO
         platform_display_type control_m;
 #endif
-        theme_t     theme_m;
         std::string name_m;
         std::string alt_text_m;
         std::size_t characters_m;
@@ -57,7 +54,7 @@ namespace adobe {
 #if 1 // TODO
     void measure_label_text(const label_t& label, extents_t& result, platform_display_type temp_parent);
 
-    extents_t measure_text(const std::string& text, theme_t theme, platform_display_type temp_parent);
+    extents_t measure_text(const std::string& text, platform_display_type temp_parent);
 #endif
 
     std::string get_control_string(const label_t& widget);

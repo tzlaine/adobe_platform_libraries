@@ -24,11 +24,9 @@ namespace implementation {} // namespace implementation
 
 /****************************************************************************************************/
 
-preview_t::preview_t(const std::string& alt_text,
-                     theme_t            theme) :
+preview_t::preview_t(const std::string& alt_text) :
     alt_text_m(alt_text),
-    sublayout_m(theme),
-    theme_m(theme)
+    sublayout_m()
 { }
 
 /****************************************************************************************************/

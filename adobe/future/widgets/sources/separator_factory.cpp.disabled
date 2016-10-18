@@ -30,7 +30,7 @@ void create_widget(const dictionary_t& parameters,
     name_t orientation (key_horizontal);
     get_value(parameters, key_orientation, orientation);
     bool is_vertical = (orientation == key_vertical);
-    widget = new separator_t(is_vertical, theme_none_s);
+    widget = new separator_t(is_vertical);
 }
 
 /****************************************************************************************************/

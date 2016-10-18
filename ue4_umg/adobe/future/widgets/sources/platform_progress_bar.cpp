@@ -64,13 +64,11 @@ progress_bar_t::progress_bar_t(pb_style_t bar_style,
                                bool is_vertical,
                                const value_range_format_t& format,
                                unsigned long /*min*/,
-                               unsigned long /*max*/,
-                               theme_t theme) :
+                               unsigned long /*max*/) :
     control_m(),
     bar_style_m(bar_style),
     is_vertical_m(is_vertical),
-    format_m(format),
-    theme_m(theme)
+    format_m(format)
 { }
 
 /****************************************************************************************************/

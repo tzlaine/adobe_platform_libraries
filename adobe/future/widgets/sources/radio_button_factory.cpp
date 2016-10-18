@@ -34,7 +34,7 @@ void create_widget(const dictionary_t& parameters,
     get_value(parameters, key_alt_text, alt_text);
     get_value(parameters, key_value, set_value);
 
-    widget = new radio_button_t(name, alt_text, set_value, implementation::size_to_theme(size));
+    widget = new radio_button_t(name, alt_text, set_value);
 }
     
 /****************************************************************************************************/

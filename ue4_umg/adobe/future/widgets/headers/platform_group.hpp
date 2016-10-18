@@ -29,8 +29,7 @@ namespace adobe {
 struct group_t
 {
     group_t(const std::string& name,
-            const std::string& alt_text,
-            theme_t     theme);
+            const std::string& alt_text);
 
     void measure(extents_t& result);
 
@@ -41,7 +40,6 @@ struct group_t
 #endif
     std::string          name_m;
     std::string          alt_text_m;
-    theme_t       theme_m;
 };
 
 /****************************************************************************************************/

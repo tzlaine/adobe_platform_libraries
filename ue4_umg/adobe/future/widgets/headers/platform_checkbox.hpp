@@ -46,7 +46,6 @@ struct checkbox_t
     checkbox_t(const std::string&          name,
                const any_regular_t& true_value,
                const any_regular_t& false_value,
-               theme_t              theme,
                const std::string&          alt_text);
 
     void measure(extents_t& result);
@@ -64,7 +63,6 @@ struct checkbox_t
 #if 1 // TODO
     platform_display_type control_m;
 #endif
-    theme_t       theme_m;
     setter_type          hit_proc_m;
     any_regular_t true_value_m;
     any_regular_t false_value_m;

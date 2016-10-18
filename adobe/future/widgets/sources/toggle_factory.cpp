@@ -35,7 +35,6 @@ void create_widget(const dictionary_t&  parameters,
     toggle_t::image_type image_on;
     toggle_t::image_type image_off;
     toggle_t::image_type image_disabled;
-    theme_t              theme(implementation::size_to_theme(size));
 
     get_value(parameters, key_alt_text).cast(alt_text);
     get_value(parameters, key_value_on).cast(value_on);
@@ -43,7 +42,7 @@ void create_widget(const dictionary_t&  parameters,
     get_value(parameters, key_image_off).cast(image_off);
     get_value(parameters, key_image_disabled).cast(image_disabled);
 
-    widget = new toggle_t(alt_text, value_on, image_on, image_off, image_disabled, theme);
+    widget = new toggle_t(alt_text, value_on, image_on, image_off, image_disabled);
 }
 
 /*************************************************************************************************/

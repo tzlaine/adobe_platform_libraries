@@ -38,8 +38,7 @@ namespace adobe {
             const std::string& alt_text,
             const std::string& custom_item_name,
             const menu_item_t* first,
-            const menu_item_t* last,
-            theme_t            theme);
+            const menu_item_t* last);
 
     void                reset_menu_item_set(const menu_item_t* first, const menu_item_t* last);
 
@@ -68,7 +67,6 @@ namespace adobe {
 #if 1 // TODO
     platform_display_type control_m;
 #endif
-    theme_t              theme_m;
     label_t              name_m;
     std::string          alt_text_m;
     long                 static_baseline_m;

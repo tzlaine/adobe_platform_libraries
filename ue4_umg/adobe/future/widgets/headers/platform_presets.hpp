@@ -56,7 +56,6 @@ struct presets_t : boost::noncopyable
         \param localization_set Set of named arguments that contain the basic string keys for
                                 localization of widget-private resources (e.g., the keys used
                                 in the add/delete subdialogs to the preset widget).
-        \param theme            Theme for the widget
 
         \note
             If the presets is set to a value other than <code>true_value</code> or
@@ -66,8 +65,7 @@ struct presets_t : boost::noncopyable
               const std::string&         domain,
               const std::string&         alt_text,
               const array_t&             bind_set,
-              const dictionary_t&        localization_set,
-              theme_t                    theme);
+              const dictionary_t&        localization_set);
 
 
     /*!
@@ -108,7 +106,6 @@ struct presets_t : boost::noncopyable
     dictionary_t          localization_set_m;
     popup_t               category_popup_m; // the category popup
     popup_t               popup_m;          // the actual preset popup
-    theme_t               theme_m;
     array_t               bind_set_m; // the set of parameters to be stored in the preset
     std::string           name_m;
     std::string           domain_m;

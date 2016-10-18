@@ -30,8 +30,7 @@ namespace adobe {
 control_button_t::control_button_t(const std::string&          name,
                                    const std::string&          alt_text,
                                    const expression_eval_proc& eval_proc,
-                                   const array_t&              expression,
-                                   theme_t                     theme) :
+                                   const array_t&              expression) :
     eval_proc_m(eval_proc),
     expression_m(expression)
 {
@@ -42,7 +41,7 @@ control_button_t::control_button_t(const std::string&          name,
     state.alt_text_m = alt_text;
     state.hit_proc_m = boost::bind(&control_button_t::button_fire, boost::ref(*this), _1, _2);
 
-    button_m.reset(new button_t(false, false, modifiers_t(), first, boost::next(first), theme));
+    button_m.reset(new button_t(false, false, modifiers_t(), first, boost::next(first)));
 }
 
 /*************************************************************************************************/

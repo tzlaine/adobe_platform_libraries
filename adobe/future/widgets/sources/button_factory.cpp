@@ -218,8 +218,7 @@ button_t* create_button_widget(const dictionary_t&    parameters,
     std::size_t                n(state_set.size());
 
     button_t* result = new button_t(is_default, is_cancel, modifier_mask,
-                                    first_state, first_state + n,
-                                    implementation::size_to_theme(size));
+                                    first_state, first_state + n);
 
     for (array_t::const_iterator iter(items.begin()), last(items.end()); iter != last; ++iter)
     {

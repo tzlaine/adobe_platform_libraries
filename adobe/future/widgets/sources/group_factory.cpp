@@ -27,12 +27,11 @@ void create_widget(const dictionary_t&   parameters,
 {
     std::string    name;
     std::string    alt_text;
-    theme_t theme(implementation::size_to_theme(size));
 
     get_value(parameters, key_name, name);
     get_value(parameters, key_alt_text, alt_text);
 
-    group = new group_t(name, alt_text, theme);
+    group = new group_t(name, alt_text);
 }
 
 /****************************************************************************************************/

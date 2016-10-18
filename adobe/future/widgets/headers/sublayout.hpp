@@ -26,15 +26,15 @@ namespace adobe {
 class sublayout_t
 {
 public:
-    explicit sublayout_t(theme_t theme = theme_normal_s) :
-        root_m(any_regular_t(true), theme)
+    explicit sublayout_t() :
+        root_m(any_regular_t(true))
     {
         vm_lookup_m.attach_to(sublayout_sheet_m);
         vm_lookup_m.attach_to(sublayout_sheet_m.machine_m);
     }
 
     sublayout_t(const sublayout_t& rhs) :
-        root_m(any_regular_t(true), rhs.root_m.theme_m)
+        root_m(any_regular_t(true))
     { }
 
     sublayout_t& operator=(const sublayout_t& /*rhs*/)

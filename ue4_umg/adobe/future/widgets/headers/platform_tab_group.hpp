@@ -40,7 +40,7 @@ struct tab_group_t : boost::noncopyable
 
     typedef std::vector<tab_t>  tab_set_t;
     
-    tab_group_t(const tab_t* first, const tab_t* last, theme_t theme);
+    tab_group_t(const tab_t* first, const tab_t* last);
 
 
 #if 1 // TODO
@@ -60,7 +60,6 @@ struct tab_group_t : boost::noncopyable
 #if 1 // TODO
     platform_display_type control_m;
 #endif
-    theme_t theme_m;
     tab_group_value_proc_t value_proc_m;
     tab_set_t items_m;
 };

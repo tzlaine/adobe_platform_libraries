@@ -60,11 +60,9 @@ namespace adobe {
 
 reveal_t::reveal_t(const std::string& name,
                    const any_regular_t&	show_value,
-                   theme_t theme,
                    const std::string& alt_text) :
     control_m(),
-    theme_m(theme),
-    name_m(name, std::string(), 0, theme),
+    name_m(name, std::string(), 0),
     using_label_m(!name.empty()),
     show_value_m(show_value),
     alt_text_m(alt_text)

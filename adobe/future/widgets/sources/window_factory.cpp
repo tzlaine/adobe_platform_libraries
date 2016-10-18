@@ -47,10 +47,9 @@ void create_widget(const dictionary_t& parameters,
         attributes |= window_attributes_metal_s;
 
     window = new window_t(name,
-                        window_style_moveable_modal_s,
-                        attributes,
-                        window_modality_none_s,
-                        implementation::size_to_theme(size));
+                          window_style_moveable_modal_s,
+                          attributes,
+                          window_modality_none_s);
 }
 
 /****************************************************************************************************/

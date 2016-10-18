@@ -41,7 +41,7 @@ void create_widget(const dictionary_t& parameters,
 
     get_value(parameters, key_value, value);
 
-    widget = new panel_t(value, implementation::size_to_theme(size));
+    widget = new panel_t(value);
 }
 
 /*************************************************************************************************/

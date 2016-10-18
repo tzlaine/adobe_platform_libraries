@@ -131,14 +131,12 @@ namespace adobe {
 window_t::window_t(const std::string&  name,
                    window_style_t style,
                    window_attributes_t attributes,
-                   window_modality_t modality,
-                   theme_t theme) :
+                   window_modality_t modality) :
     window_m(0),
     name_m(name),
     style_m(style),
     attributes_m(attributes),
     modality_m(modality),
-    theme_m(theme),
     debounce_m(false),
     placed_once_m(false)
 { }
@@ -168,7 +166,7 @@ void window_t::measure(extents_t& result)
         return;
     }
 
-    result = measure_text(name_m, theme_m, window_m);
+    result = measure_text(name_m, window_m);
 
     result.width() = static_cast<long>(result.width() * 1.5);
 }

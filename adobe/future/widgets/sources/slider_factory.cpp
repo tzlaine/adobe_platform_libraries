@@ -47,11 +47,10 @@ void create_widget(const dictionary_t& parameters,
     else if (slider_pointing == "right"_name) style = slider_points_right_s;
 
     widget = new slider_t(alt_text,
-                                 orientation == key_vertical,
-                                 style,
-                                 num_ticks,
-                                 format,
-                                 implementation::size_to_theme(size));
+                          orientation == key_vertical,
+                          style,
+                          num_ticks,
+                          format);
 }
 
 /****************************************************************************************************/

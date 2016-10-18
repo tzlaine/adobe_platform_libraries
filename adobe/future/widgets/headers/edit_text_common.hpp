@@ -40,7 +40,6 @@ struct edit_text_ctor_block_t
     long        min_characters_m;
     long        max_characters_m; // 0 here means unlimited. Only matters when num_lines_m == 1
     long        num_lines_m;
-    theme_t     theme_m;
 };
 
 /*************************************************************************************************/

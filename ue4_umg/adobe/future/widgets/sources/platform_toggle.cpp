@@ -114,10 +114,8 @@ toggle_t::toggle_t(const std::string& alt_text,
                    const any_regular_t value_on,
                    const image_type& image_on,
                    const image_type& image_off,
-                   const image_type& image_disabled,
-                   theme_t theme) :
+                   const image_type& image_disabled) :
     control_m(),
-    theme_m(theme),
     alt_text_m(alt_text),
     image_on_m(image_on),
     image_off_m(image_off),
