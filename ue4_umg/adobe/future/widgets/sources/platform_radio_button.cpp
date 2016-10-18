@@ -25,7 +25,7 @@ radio_button_t::radio_button_t(const std::string& name,
                                const std::string& alt_text,
                                const any_regular_t& set_value,
                                theme_t theme) :
-    control_m(0),
+    control_m(),
     name_m(name),
     alt_text_m(alt_text),
     set_value_m(set_value),

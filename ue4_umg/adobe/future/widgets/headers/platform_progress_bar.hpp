@@ -80,7 +80,7 @@ struct progress_bar_t : boost::noncopyable
     void        set_max_value(long max_value);
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
 
 private:

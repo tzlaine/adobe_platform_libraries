@@ -273,7 +273,7 @@ void window_t::set_visible(bool make_visible)
     if (false)//TODO IsWindowVisible(window_m) == false)
         reposition(window_reposition_center_s);
 
-    set_control_visible(window_m, make_visible);
+    window_m->SetVisibility(make_visible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 
     // TODO ::EnableWindow(window_m, make_visible);
 }

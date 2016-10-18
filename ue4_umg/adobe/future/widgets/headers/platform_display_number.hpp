@@ -40,10 +40,7 @@ struct display_number_t  : boost::noncopyable
                      int characters);
 
 #if 1 // TODO
-    platform_display_type     window_m;
-#endif
-#if 0 // TODO
-    WNDPROC                  default_window_proc_m;
+    platform_display_type    control_m;
 #endif
 #if 1 // TODO
     int                      bounds_m;
@@ -88,8 +85,8 @@ display_number_t::display_number_t(
 /****************************************************************************************************/
 
 #if 1 // TODO
-inline platform_display_type get_display(const display_number_t& widget)
-{ return widget.window_m; }
+inline platform_display_type & get_display(display_number_t & widget)
+{ return widget.control_m; }
 #endif
 
 /****************************************************************************************************/

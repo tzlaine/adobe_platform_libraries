@@ -35,7 +35,7 @@ struct separator_t : boost::noncopyable, extents_slices_t
     void            set_visible(bool make_visible);
     
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     bool            is_vertical_m;
     theme_t  theme_m;

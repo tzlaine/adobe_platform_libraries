@@ -66,7 +66,7 @@ namespace adobe {
     void                enable(bool make_enabled);
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     theme_t              theme_m;
     label_t              name_m;

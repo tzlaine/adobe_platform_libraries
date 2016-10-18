@@ -30,7 +30,7 @@ const long fixed_height = fixed_width;
 
 /****************************************************************************************************/
 
-void reset_image(adobe::platform_display_type window, const adobe::image_t::view_model_type& view)
+void reset_image(adobe::platform_display_type control, const adobe::image_t::view_model_type& view)
 {
     /* TODO
     HBITMAP bitmap_handle;
@@ -64,7 +64,7 @@ namespace adobe {
 /****************************************************************************************************/
 
 image_t::image_t(const view_model_type& image) :
-    window_m(0),
+    control_m(),
     image_m(image),
     enabled_m(false),
     tracking_m(false)
@@ -119,7 +119,7 @@ LRESULT image_t::handle_event(HWND window, UINT message, WPARAM wparam, LPARAM l
     else if (message == WM_LBUTTONDOWN)
     {
         tracking_m = true;
-        prev_capture_m = ::SetCapture(window_m);
+        prev_capture_m = ::SetCapture(control_m);
         last_point_m = MAKEPOINTS(lparam);
 
         return 0;
@@ -158,7 +158,7 @@ void image_t::display(const view_model_type& value)
     else
         origin_m.second = static_cast<long>((image_m.height() - fixed_height) / 2);
 
-    reset_image(window_m, image_m);
+    reset_image(control_m, image_m);
 }
 
 /****************************************************************************************************/
@@ -179,7 +179,7 @@ void image_t::enable(bool make_enabled)
 void initialize(image_t& value, platform_display_type parent)
 {
     /* TODO
-    value.window_m = ::CreateWindowExA(WS_EX_COMPOSITED, "STATIC",
+    value.control_m = ::CreateWindowExA(WS_EX_COMPOSITED, "STATIC",
                                        NULL,
                                        WS_CHILD | WS_VISIBLE | SS_BITMAP,
                                        0, 0,
@@ -191,23 +191,23 @@ void initialize(image_t& value, platform_display_type parent)
                                        NULL);
     */
 
-    if (value.window_m == nullptr)
+    if (value.control_m == nullptr)
         ADOBE_THROW_LAST_ERROR;
 
 #if 0 // TODO: Replace with a signal.
-    value.handler_m->install<implementation_proc_name>(value.window_m);
+    value.handler_m->install<implementation_proc_name>(value.control_m);
 #endif
 
     // now set up the bitmap
 
-    reset_image(value.window_m, value.image_m);
+    reset_image(value.control_m, value.image_m);
 }
 
 /****************************************************************************************************/
 
 void place(image_t& value, const place_data_t& place_data)
 {
-    implementation::set_control_bounds(value.window_m, place_data);
+    implementation::set_control_bounds(value.control_m, place_data);
 
     if (value.callback_m)
     {
@@ -257,7 +257,7 @@ void measure_vertical(image_t& value, extents_t& result, const place_data_t& pla
 
 void enable(image_t& value, bool make_enabled)
 {
-    // TODO ::EnableWindow(value.window_m, make_enabled);
+    // TODO ::EnableWindow(value.control_m, make_enabled);
 }
 
 /****************************************************************************************************/
@@ -266,7 +266,7 @@ void set(image_t& value, boost::gil::rgba8_image_t& image)
 {
     value.image_m = image;
 
-    reset_image(value.window_m, value.image_m);
+    reset_image(value.control_m, value.image_m);
 }
 
 /*************************************************************************************************/

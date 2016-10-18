@@ -106,7 +106,7 @@ void display_number_t::initialize(platform_display_type parent)
     long width(bounds.right - bounds.left);
     long height(bounds.bottom - bounds.top);
 
-    window_m = ::CreateWindowExW(WS_EX_COMPOSITED, L"STATIC",
+    control_m = ::CreateWindowExW(WS_EX_COMPOSITED, L"STATIC",
                                  NULL,
                                  WS_CHILD | WS_VISIBLE,
                                  bounds.left, bounds.top, width, height,
@@ -115,13 +115,13 @@ void display_number_t::initialize(platform_display_type parent)
                                  ::GetModuleHandle(NULL),
                                  NULL);
 
-    if (window_m == NULL)
+    if (control_m == NULL)
         ADOBE_THROW_LAST_ERROR;
 
     if (!alt_text_m.empty())
-        implementation::set_control_alt_text(window_m, alt_text_m);
+        implementation::set_control_alt_text(control_m, alt_text_m);
 
-    set_font(window_m, EP_EDITTEXT);
+    set_font(control_m, EP_EDITTEXT);
     */
 }
 
@@ -129,35 +129,35 @@ void display_number_t::initialize(platform_display_type parent)
 
 void display_number_t::place(const place_data_t& place_data)
 {
-    implementation::set_control_bounds(window_m, place_data);
+    implementation::set_control_bounds(control_m, place_data);
 }
 
 /****************************************************************************************************/
 
 void display_number_t::display(const model_type& value)
 {
-    assert(window_m);
+    assert(control_m);
 
-    // TODO ::SetWindowTextW(window_m, set_field_text(name_m, value, unit_set_m).c_str());
+    // TODO ::SetWindowTextW(control_m, set_field_text(name_m, value, unit_set_m).c_str());
 }
 
 /****************************************************************************************************/
 
 void display_number_t::measure(extents_t& result)
 {
-    assert(window_m);
+    assert(control_m);
 
 #if 0 // TODO
-    extents_t space_extents(metrics::measure_text(std::string(" "), window_m, EP_EDITTEXT));
+    extents_t space_extents(metrics::measure_text(std::string(" "), control_m, EP_EDITTEXT));
     extents_t unit_max_extents;
-    extents_t label_extents(metrics::measure_text(name_m, window_m, EP_EDITTEXT));
+    extents_t label_extents(metrics::measure_text(name_m, control_m, EP_EDITTEXT));
     extents_t characters_extents =
-        metrics::measure_text(std::string(characters_m, '0'), window_m, EP_EDITTEXT);
+        metrics::measure_text(std::string(characters_m, '0'), control_m, EP_EDITTEXT);
 
     for (display_number_t::unit_set_t::iterator iter(unit_set_m.begin()),
          end(unit_set_m.end()); iter != end; ++iter)
         {
-            extents_t tmp(metrics::measure_text(iter->name_m, window_m, EP_EDITTEXT));
+            extents_t tmp(metrics::measure_text(iter->name_m, control_m, EP_EDITTEXT));
 
             if (tmp.width() > unit_max_extents.width())
                 unit_max_extents = tmp;
@@ -200,11 +200,11 @@ void display_number_t::measure(extents_t& result)
 void display_number_t::measure_vertical(extents_t& calculated_horizontal, const place_data_t& placed_horizontal)
 {
     /* TODO
-    assert(window_m);
+    assert(control_m);
 
     RECT save_bounds;
 
-    implementation::get_control_bounds(window_m, save_bounds);
+    implementation::get_control_bounds(control_m, save_bounds);
 
     place_data_t static_bounds;
 
@@ -213,10 +213,10 @@ void display_number_t::measure_vertical(extents_t& calculated_horizontal, const 
     width(static_bounds) = width(placed_horizontal);
     height(static_bounds) = 10000; // bottomless
 
-    implementation::set_control_bounds(window_m, static_bounds);
+    implementation::set_control_bounds(control_m, static_bounds);
 
-    HDC hdc(::GetWindowDC(window_m));
-    std::string title(implementation::get_window_title(window_m));
+    HDC hdc(::GetWindowDC(control_m));
+    std::string title(implementation::get_window_title(control_m));
 
     std::string wtitle;
     to_utf16(title.begin(), title.end(), std::back_inserter(wtitle));
@@ -254,7 +254,7 @@ void display_number_t::measure_vertical(extents_t& calculated_horizontal, const 
     vert.length_m = out_extent.bottom - out_extent.top;
     // set the baseline for the text
  
-    metrics::set_window(window_m);
+    metrics::set_window(control_m);
 
     if (have_tm)
         // distance from top to baseline
@@ -267,7 +267,7 @@ void display_number_t::measure_vertical(extents_t& calculated_horizontal, const 
     width(restore_bounds) = save_bounds.right - save_bounds.left;
     height(restore_bounds) = save_bounds.bottom - save_bounds.top;
 
-    implementation::set_control_bounds(window_m, restore_bounds);
+    implementation::set_control_bounds(control_m, restore_bounds);
     */
 }
 

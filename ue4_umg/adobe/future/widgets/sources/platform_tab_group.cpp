@@ -67,7 +67,7 @@ LRESULT CALLBACK tab_group_subclass_proc(HWND     window,
 tab_group_t::tab_group_t(const tab_t* first,
                          const tab_t* last,
                          theme_t theme) :
-    control_m(NULL),
+    control_m(),
     theme_m(theme),
     value_proc_m(),
     items_m(first, last)

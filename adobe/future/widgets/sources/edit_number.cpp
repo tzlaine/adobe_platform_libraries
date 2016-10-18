@@ -301,7 +301,7 @@ void edit_number_t::display_unit(const edit_number_unit_subwidget_t::model_type&
         // reset the value of the new unit to the scale of the new value
         // as it can be extracted from the edit_text field at this point.
 
-        monitor_text(implementation::get_field_text(edit_text_m));
+        monitor_text(get_control_string(edit_text_m));
     }
     else
     {

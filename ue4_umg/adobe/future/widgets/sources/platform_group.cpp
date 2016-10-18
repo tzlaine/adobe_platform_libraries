@@ -26,7 +26,7 @@ namespace adobe {
 group_t::group_t(const std::string& name,
                  const std::string& alt_text,
                  theme_t theme) :
-    control_m(0),
+    control_m(),
     name_m(name),
     alt_text_m(alt_text),
     theme_m(theme)

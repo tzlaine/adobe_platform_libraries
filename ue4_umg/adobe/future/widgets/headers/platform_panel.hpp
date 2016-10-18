@@ -39,11 +39,16 @@ struct panel_t : extents_slices_t, boost::noncopyable
     void        set_visible(bool make_visible); 
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     theme_t          theme_m;
     any_regular_t    show_value_m;
 };
+
+/****************************************************************************************************/
+
+inline platform_display_type get_display(panel_t const & panel)
+{ return panel.control_m; }
 
 /****************************************************************************************************/
 

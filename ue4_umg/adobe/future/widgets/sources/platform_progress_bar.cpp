@@ -66,7 +66,7 @@ progress_bar_t::progress_bar_t(pb_style_t bar_style,
                                unsigned long /*min*/,
                                unsigned long /*max*/,
                                theme_t theme) :
-    control_m(0),
+    control_m(),
     bar_style_m(bar_style),
     is_vertical_m(is_vertical),
     format_m(format),

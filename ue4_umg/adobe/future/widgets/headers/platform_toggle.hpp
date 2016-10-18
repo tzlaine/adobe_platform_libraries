@@ -57,7 +57,7 @@ struct toggle_t
 
 #ifndef ADOBE_NO_DOCUMENTATION
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     theme_t                    theme_m;
     std::string                alt_text_m;

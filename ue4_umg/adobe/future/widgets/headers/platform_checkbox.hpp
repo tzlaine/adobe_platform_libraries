@@ -62,7 +62,7 @@ struct checkbox_t
     friend bool operator == (const checkbox_t& x, const checkbox_t& y);
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     theme_t       theme_m;
     setter_type          hit_proc_m;

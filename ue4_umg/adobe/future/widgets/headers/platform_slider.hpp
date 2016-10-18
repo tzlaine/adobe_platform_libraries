@@ -53,7 +53,7 @@ struct slider_t : boost::noncopyable
         { value_proc_m = proc; }
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     std::string          alt_text_m;
     bool                 is_vertical_m;

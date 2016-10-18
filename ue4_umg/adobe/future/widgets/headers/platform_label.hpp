@@ -31,12 +31,9 @@ namespace adobe {
         ~label_t();
 
 #if 1 // TODO
-        platform_display_type window_m;
+        platform_display_type control_m;
 #endif
         theme_t     theme_m;
-#if 0 // TODO
-        WNDPROC     default_window_proc_m;
-#endif
         std::string name_m;
         std::string alt_text_m;
         std::size_t characters_m;
@@ -65,10 +62,8 @@ namespace adobe {
 
     std::string get_control_string(const label_t& widget);
 
-#if 1 // TODO
-    inline platform_display_type get_display(const label_t& widget)
-    { return widget.window_m; }
-#endif
+    inline platform_display_type & get_display(label_t & widget)
+    { return widget.control_m; }
 
 } // namespace adobe
 

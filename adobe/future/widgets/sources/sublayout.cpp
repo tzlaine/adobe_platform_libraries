@@ -48,6 +48,8 @@ widget_node_t sublayout_t::evaluate(const std::string&       sheet_description,
 
     std::stringstream layout_stream(layout_description);
 
+    platform_display_type display_root = get_display(root_m);
+
     sublayout_holder_m = make_view("sublayout layout"_name,
                                    line_position_t::getline_proc_t(),
                                    layout_stream,
@@ -56,7 +58,7 @@ widget_node_t sublayout_t::evaluate(const std::string&       sheet_description,
                                    notifier,
                                    size,
                                    default_widget_factory_proc_with_factory(factory),
-                                   root_m.control_m);
+                                   display_root);
 
     eve_t::iterator eve_token =
         attach_placeable<poly_placeable_t>(parent.eve_token_m,

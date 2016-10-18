@@ -422,7 +422,7 @@ extents_t calculate_edit_bounds(platform_display_type control, int cols, int row
     //
     // First make sure that we have a valid control.
     //
-    assert(control);
+    assert(control.widget_m);
     /* TODO
     //
     // We figure out the size by sending an EM_GETRECT message to the edit

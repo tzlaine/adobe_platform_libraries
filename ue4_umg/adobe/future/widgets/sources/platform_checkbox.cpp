@@ -27,7 +27,7 @@ checkbox_t::checkbox_t(const std::string& name,
                        const any_regular_t& false_value,
                        theme_t theme,
                        const std::string& alt_text) :
-    control_m(0),
+    control_m(),
     theme_m(theme),
     true_value_m(true_value),
     false_value_m(false_value),
@@ -125,7 +125,7 @@ platform_display_type insert<checkbox_t>(display_t& display,
 
     return display.insert(parent, element.control_m);
     */
-    return nullptr;
+    return platform_display_type();
 }
 
 /****************************************************************************************************/

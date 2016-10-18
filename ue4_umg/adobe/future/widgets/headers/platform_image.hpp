@@ -36,17 +36,13 @@ struct image_t : boost::noncopyable
 
     image_t(const view_model_type& image);
 
-#if 0 // TODO
-    LRESULT handle_event(HWND window, UINT message, WPARAM wparam, LPARAM lparam, WNDPROC next_proc);
-#endif
-
     void display(const view_model_type& value);
 
     void monitor(const setter_proc_type& proc);
     void enable(bool make_enabled);
 
 #if 1 // TODO
-    platform_display_type               window_m;
+    platform_display_type              control_m;
 #endif
     view_model_type                    image_m;
     setter_proc_type                   callback_m;
@@ -56,9 +52,6 @@ struct image_t : boost::noncopyable
 #if 0 // TODO: Replace with a signal.
     // mouse tracking stuff
     std::unique_ptr<message_handler_t> handler_m;
-#endif
-#if 1 // TODO
-    platform_display_type               prev_capture_m;
 #endif
     bool                               tracking_m;
 #if 1 // TODO
@@ -72,8 +65,8 @@ struct image_t : boost::noncopyable
 #if 1 // TODO
 void initialize(image_t& value, platform_display_type parent);
 
-inline platform_display_type get_display(image_t& widget)
-{ return widget.window_m; }
+inline platform_display_type & get_display(image_t & widget)
+{ return widget.control_m; }
 #endif
 
 /****************************************************************************************************/

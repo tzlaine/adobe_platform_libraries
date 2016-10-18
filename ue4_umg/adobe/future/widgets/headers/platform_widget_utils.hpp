@@ -24,24 +24,13 @@ namespace implementation {
 
 /****************************************************************************************************/
 
-platform_display_type get_parent(platform_control_type control);
+platform_display_type get_parent(platform_display_type control);
 
 std::string get_window_title(platform_display_type window);
 
-inline std::string get_control_string(platform_control_type control)
-{ return implementation::get_window_title(control); }
+void get_control_bounds(platform_display_type control, int/*RECT*/& bounds);
 
-void get_control_bounds(platform_control_type control, int/*RECT*/& bounds);
-
-void set_control_bounds(platform_control_type control, const place_data_t& place_data);
-
-template <typename T>
-inline std::string get_field_text(T& x)
-{ return get_control_string(x.control_m); }
-
-template <>
-inline std::string get_field_text<platform_control_type>(platform_control_type& x)
-{ return get_control_string(x); }
+void set_control_bounds(platform_display_type control, const place_data_t& place_data);
 
 /****************************************************************************************************/
 
@@ -50,7 +39,7 @@ inline bool is_focused(T& control)
 { return is_focused(control.control_m); }
 
 template <>
-inline bool is_focused(platform_control_type& control)
+inline bool is_focused(platform_display_type& control)
 { return false/*::GetFocus() == control*/; }
 
 /****************************************************************************************************/
@@ -88,7 +77,7 @@ void set_font(platform_display_type window, int uxtheme_type);
 
 /****************************************************************************************************/
 
-inline void set_control_visible(platform_control_type control, bool make_visible)
+inline void set_control_visible(platform_display_type control, bool make_visible)
 {
     assert(control);
 
@@ -97,7 +86,7 @@ inline void set_control_visible(platform_control_type control, bool make_visible
 
 /****************************************************************************************************/
 
-inline void set_control_enabled(platform_control_type control, bool make_enabled)
+inline void set_control_enabled(platform_display_type control, bool make_enabled)
 {
     assert(control);
 
@@ -116,13 +105,13 @@ bool context_menu(platform_display_type parent,
 
 #if 0
 #if 1 // TODO
-void* /*LONG_PTR*/ get_user_reference(platform_control_type control);
+void* /*LONG_PTR*/ get_user_reference(platform_display_type control);
 #endif
 
 /****************************************************************************************************/
 
 template <typename T>
-void set_user_reference(platform_control_type control, T data)
+void set_user_reference(platform_display_type control, T data)
 {
     assert(control);
 

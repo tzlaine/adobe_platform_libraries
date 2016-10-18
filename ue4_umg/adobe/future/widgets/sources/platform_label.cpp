@@ -29,7 +29,7 @@ label_t::label_t(const std::string& name,
                  const std::string& alt_text,
                  std::size_t characters,
                  theme_t theme) :
-    window_m(0),
+    control_m(),
     theme_m(theme),
     name_m(name),
     alt_text_m(alt_text),
@@ -40,27 +40,27 @@ label_t::label_t(const std::string& name,
 
 label_t::~label_t()
 {
-    // TODO ::DestroyWindow(window_m);
+    // TODO ::DestroyWindow(control_m);
 }
 
 /****************************************************************************************************/
 
 void place(label_t& value, const place_data_t& place_data)
 {
-    implementation::set_control_bounds(value.window_m, place_data);
+    implementation::set_control_bounds(value.control_m, place_data);
 
     if (!value.alt_text_m.empty())
-        implementation::set_control_alt_text(value.window_m, value.alt_text_m);
+        implementation::set_control_alt_text(value.control_m, value.alt_text_m);
 }
 
 /****************************************************************************************************/
 
 void measure(label_t& value, extents_t& result)
 {
-    assert(value.window_m);
+    assert(value.control_m);
 
     /* TODO
-    metrics::set_window(value.window_m);
+    metrics::set_window(value.control_m);
     //
     // If we don't have the type of this widget, then we should return a
     // zero sized rectangle. This is usually correct, and a good assumption
@@ -123,12 +123,12 @@ void measure(label_t& value, extents_t& result)
 void measure_vertical(label_t& value, extents_t& calculated_horizontal, 
                       const place_data_t& placed_horizontal)
 {
-    assert(value.window_m);
+    assert(value.control_m);
 
     /* TODO
     RECT save_bounds;
 
-    implementation::get_control_bounds(value.window_m, save_bounds);
+    implementation::get_control_bounds(value.control_m, save_bounds);
 
     place_data_t static_bounds;
 
@@ -137,10 +137,10 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
     width(static_bounds) = width(placed_horizontal);
     height(static_bounds) = 10000; // bottomless
 
-    implementation::set_control_bounds(value.window_m, static_bounds);
+    implementation::set_control_bounds(value.control_m, static_bounds);
 
-	HDC hdc(::GetWindowDC(value.window_m));
-    std::string title(implementation::get_window_title(value.window_m));
+	HDC hdc(::GetWindowDC(value.control_m));
+    std::string title(implementation::get_window_title(value.control_m));
 
     std::wstring wtitle;
     to_utf16(title.begin(), title.end(), std::back_inserter(wtitle));
@@ -177,7 +177,7 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
     vert.length_m = out_extent.bottom - out_extent.top;
     // set the baseline for the text
  
-    metrics::set_window(value.window_m);
+    metrics::set_window(value.control_m);
 
     if (have_tm)
         // distance from top to baseline
@@ -190,7 +190,7 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
     width(restore_bounds) = save_bounds.right - save_bounds.left;
     height(restore_bounds) = save_bounds.bottom - save_bounds.top;
 
-    implementation::set_control_bounds(value.window_m, restore_bounds);
+    implementation::set_control_bounds(value.control_m, restore_bounds);
     */
 }
 
@@ -198,17 +198,17 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
 
 void enable(label_t& value, bool make_enabled)
 {
-    // TODO ::EnableWindow(value.window_m, make_enabled);
+    // TODO ::EnableWindow(value.control_m, make_enabled);
 }
 
 /****************************************************************************************************/
 
 void initialize(label_t& label, platform_display_type parent)
 {
-    assert(!label.window_m);
+    assert(!label.control_m.widget_m);
 
     /* TODO
-    label.window_m = ::CreateWindowExW(WS_EX_COMPOSITED, L"STATIC",
+    label.control_m = ::CreateWindowExW(WS_EX_COMPOSITED, L"STATIC",
                                        hackery::convert_utf(label.name_m).c_str(),
                                        WS_CHILD | WS_VISIBLE,
                                        0, 0, 100, 20,
@@ -218,13 +218,13 @@ void initialize(label_t& label, platform_display_type parent)
                                        NULL);
     */
 
-    if (label.window_m == nullptr)
+    if (label.control_m == nullptr)
         ADOBE_THROW_LAST_ERROR;
 
-    // TODO set_font(label.window_m, EP_EDITTEXT);
+    // TODO set_font(label.control_m, EP_EDITTEXT);
 
     if (!label.alt_text_m.empty())
-        implementation::set_control_alt_text(label.window_m, label.alt_text_m);
+        implementation::set_control_alt_text(label.control_m, label.alt_text_m);
 }
 
 /****************************************************************************************************/
@@ -245,7 +245,7 @@ void measure_label_text(const label_t& label, extents_t& result, platform_displa
 {
     label_t& temp(const_cast<label_t&>(label));
 
-    if (temp.window_m == nullptr)
+    if (temp.control_m == nullptr)
         initialize(temp, temp_parent);
 
     measure(temp, result);
@@ -259,7 +259,8 @@ void measure_label_text(const label_t& label, extents_t& result, platform_displa
 
 std::string get_control_string(const label_t& widget)
 {
-    return implementation::get_control_string(widget.window_m);
+    UTextBlock* text_block = dynamic_cast<UTextBlock*>(widget.control_m);
+    return TCHAR_TO_UTF8(*text_block->GetText().ToString());
 }
 
 /****************************************************************************************************/

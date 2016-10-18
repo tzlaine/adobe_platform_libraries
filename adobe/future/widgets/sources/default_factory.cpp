@@ -325,18 +325,22 @@ namespace adobe {
         */
         get_main_display().set_root(display_root);
 
-	result->layout_sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::layout_variables, boost::ref(result->layout_sheet_m), _1));
+        result->layout_sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::layout_variables, boost::ref(result->layout_sheet_m), _1));
+
+        widget_node_t root_node(
+            dialog_size,
+            eve_t::iterator(),
+            get_main_display().root(),
+            keyboard_t::iterator()
+        );
 
         parse(stream,
               line_position_t(file_path, getline_proc),
-              widget_node_t(dialog_size,
-                            eve_t::iterator(),
-                            get_main_display().root(),
-                            keyboard_t::iterator()),
-              bind_layout(boost::bind(&client_assembler,
-                                      boost::ref(token), _1, _2, _3, boost::cref(proc)),
+              root_node,
+              bind_layout(boost::bind(&client_assembler, boost::ref(token), _1, _2, _3, boost::cref(proc)),
                           result->layout_sheet_m,
-                          result->layout_sheet_m.machine_m));
+                          result->layout_sheet_m.machine_m)
+        );
     
         result->contributing_m = sheet.contributing();
 

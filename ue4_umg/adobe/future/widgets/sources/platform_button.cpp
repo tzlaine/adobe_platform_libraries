@@ -29,7 +29,7 @@ button_t::button_t(bool is_default,
                    const button_state_descriptor_t* first,
                    const button_state_descriptor_t* last,
                    theme_t theme) :
-    control_m(0),
+    control_m(),
     theme_m(theme),
     state_set_m(first, last),
     modifier_mask_m(modifier_mask),
@@ -208,7 +208,7 @@ platform_display_type insert<button_t>(display_t& display,
     ::EnableWindow(element.control_m, element.enabled_m);
     return result;
     */
-    return nullptr;
+    return platform_display_type();
 }
 
 /****************************************************************************************************/

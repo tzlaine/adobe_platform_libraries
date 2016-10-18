@@ -79,7 +79,7 @@ namespace implementation {
     \param control is the platform widget that will receive the alt-text
     \param alt_text is the text to have shown when further widget description is warranted
 */
-void set_control_alt_text(platform_control_type control, const std::string& alt_text);
+void set_control_alt_text(platform_display_type control, const std::string& alt_text);
 
 /****************************************************************************************************/
 

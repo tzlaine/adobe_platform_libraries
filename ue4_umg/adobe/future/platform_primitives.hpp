@@ -10,15 +10,16 @@
 
 /****************************************************************************************************/
 
+#include "ui_util.h"
+#include "root_widget.h"
+
 /*************************************************************************************************/
 
 namespace adobe {
 
 /*************************************************************************************************/
 
-typedef void* platform_display_type; // TODO
-
-typedef void* platform_control_type; // TODO
+typedef UWidget* platform_display_type;
 
 typedef int key_type; // TODO
 

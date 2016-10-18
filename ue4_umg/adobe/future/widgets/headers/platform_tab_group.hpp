@@ -58,7 +58,7 @@ struct tab_group_t : boost::noncopyable
 
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     theme_t theme_m;
     tab_group_value_proc_t value_proc_m;

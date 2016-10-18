@@ -81,7 +81,7 @@ slider_t::slider_t(const std::string& alt_text,
                    std::size_t num_ticks,
                    const value_range_format_t& format,
                    theme_t theme) :
-    control_m(0),
+    control_m(),
     alt_text_m(alt_text),
     is_vertical_m(is_vertical),
     style_m(style),

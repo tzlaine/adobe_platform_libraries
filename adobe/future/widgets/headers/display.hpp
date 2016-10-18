@@ -23,14 +23,14 @@ namespace adobe {
 struct display_t
 {
     display_t() :
-        root_m(platform_display_type())
+        root_m()
     { }
 
     void set_root(platform_display_type element)
-        { root_m = element; }
+    { root_m = element; }
 
     platform_display_type root()
-        { return root_m; }
+    { return root_m; }
 
     template <typename DisplayElement>
     platform_display_type insert(platform_display_type& parent, const DisplayElement& element);

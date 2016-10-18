@@ -49,7 +49,7 @@ struct radio_button_t
     void monitor(const setter_type& proc);
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     std::string          name_m;
     std::string          alt_text_m;

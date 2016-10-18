@@ -69,9 +69,9 @@ namespace adobe {
     long              get_window_style() const;
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
-    theme_t             theme_m;
+    theme_t                    theme_m;
     label_t                    name_m;
     std::string                alt_text_m;
     std::wstring               field_text_m;
@@ -99,11 +99,12 @@ private:
 
 inline std::string get_control_string(const edit_text_t& widget)
 {
-    return implementation::get_control_string(widget.control_m);
+    UTextBlock* text_block = dynamic_cast<UTextBlock*>(widget.control_m);
+    return TCHAR_TO_UTF8(*text_block->GetText().ToString());
 }
 
 #if 1 // TODO
-inline platform_control_type get_display(const edit_text_t& widget)
+inline platform_display_type & get_display(edit_text_t & widget)
 { return widget.control_m; }
 #endif
 

@@ -28,7 +28,7 @@ adobe::toggle_t::texture_type to_texture(adobe::toggle_t::image_type const & ima
 
 /****************************************************************************************************/
 
-bool enabled(adobe::platform_control_type control)
+bool enabled(adobe::platform_display_type control)
 {
     return false; // TODO
 }
@@ -116,7 +116,7 @@ toggle_t::toggle_t(const std::string& alt_text,
                    const image_type& image_off,
                    const image_type& image_disabled,
                    theme_t theme) :
-    control_m(0),
+    control_m(),
     theme_m(theme),
     alt_text_m(alt_text),
     image_on_m(image_on),

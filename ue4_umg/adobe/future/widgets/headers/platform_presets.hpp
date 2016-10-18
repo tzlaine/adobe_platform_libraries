@@ -103,7 +103,7 @@ struct presets_t : boost::noncopyable
     { snapshot_proc_m = proc; }
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     dictionary_t          localization_set_m;
     popup_t               category_popup_m; // the category popup

@@ -50,8 +50,8 @@ struct link_t
     void monitor(const setter_type& proc);
 
 #if 1 // TODO
-    platform_control_type control_m;
-    platform_control_type link_icon_m;
+    platform_display_type control_m;
+    platform_display_type link_icon_m;
 #endif
     std::string          alt_text_m;
     any_regular_t on_value_m;

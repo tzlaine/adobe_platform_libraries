@@ -174,7 +174,7 @@ popup_t::popup_t(const std::string& name,
                  const menu_item_t* first,
                  const menu_item_t* last,
                  theme_t theme) :
-    control_m(0),
+    control_m(),
     theme_m(theme),
     name_m(name, alt_text, 0, theme),
     alt_text_m(alt_text),

@@ -53,7 +53,7 @@ struct button_t : boost::noncopyable
     bool handle_key(key_type key, bool pressed, modifiers_t modifiers);
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     theme_t            theme_m;
     button_state_set_t state_set_m;

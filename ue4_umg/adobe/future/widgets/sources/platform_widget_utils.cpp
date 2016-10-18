@@ -49,12 +49,12 @@ bool pick_save_path(boost::filesystem::path& path, platform_display_type dialog_
 
 void set_control_alt_text(platform_display_type control, const std::string& alt_text)
 {
-    // TODO: Set tooltip.
+    control->SetToolTipText(FText::FromString(FString(alt_text.c_str())));
 }
 
 /****************************************************************************************************/
 
-platform_display_type get_parent(platform_control_type control)
+platform_display_type get_parent(platform_display_type control)
 {
     return nullptr; // TODO
 }
@@ -69,7 +69,7 @@ std::string get_window_title(platform_display_type window)
 
 /****************************************************************************************************/
 
-void get_control_bounds(platform_control_type control, int/*RECT*/& bounds)
+void get_control_bounds(platform_display_type control, int/*RECT*/& bounds)
 {
     assert(control);
 
@@ -78,7 +78,7 @@ void get_control_bounds(platform_control_type control, int/*RECT*/& bounds)
 
 /****************************************************************************************************/
 
-void set_control_bounds(platform_control_type control, const place_data_t& place_data)
+void set_control_bounds(platform_display_type control, const place_data_t& place_data)
 {
     assert(control);
 

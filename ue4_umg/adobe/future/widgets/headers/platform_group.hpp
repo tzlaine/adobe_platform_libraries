@@ -37,7 +37,7 @@ struct group_t
     void place(const place_data_t& place_data);
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     std::string          name_m;
     std::string          alt_text_m;

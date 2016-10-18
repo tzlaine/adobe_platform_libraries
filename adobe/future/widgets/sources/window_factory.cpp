@@ -67,7 +67,7 @@ widget_node_t make_window(const dictionary_t&     parameters,
                      implementation::enumerate_size(get_value(parameters, key_size).cast<name_t>()) :
                      parent.size_m);
 
-    window_t* widget(NULL);
+    window_t* widget(nullptr);
     create_widget(parameters, size, widget);
     token.client_holder_m.assemblage_m.cleanup(boost::bind(delete_ptr(), widget));
 
@@ -77,7 +77,7 @@ widget_node_t make_window(const dictionary_t&     parameters,
     platform_display_type display_token(insert(get_main_display(), 
                                                parent.display_token_m, *widget));
 
-    token.client_holder_m.root_display_m = display_token;
+    token.client_holder_m.root_display_m = widget->window_m;
 
     // This is a top-level container, so we hook it up to the show_window_signal
     // (so that it gets shown when all of the children have been made and inserted).

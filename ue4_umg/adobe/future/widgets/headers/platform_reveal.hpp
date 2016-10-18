@@ -48,7 +48,7 @@ struct reveal_t : boost::noncopyable
     void monitor(const setter_type& proc);
 
 #if 1 // TODO
-    platform_control_type control_m;
+    platform_display_type control_m;
 #endif
     theme_t          theme_m;
     label_t			name_m;
