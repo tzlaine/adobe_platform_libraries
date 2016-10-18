@@ -90,17 +90,14 @@ namespace adobe {
 modal_dialog_t::modal_dialog_t() :
     display_options_m(dialog_display_s),
     parent_m(platform_display_type()),
-    root_behavior_m(false),
-    defer_view_close_m(false)
+    root_behavior_m(false)
 { }
 
 /****************************************************************************************************/
 
-dialog_result_t modal_dialog_t::go(std::istream& layout, std::istream& sheet)
+platform_display_type modal_dialog_t::init(std::istream& layout, std::istream& sheet)
 {
     resource_context_t res_context(working_directory_m);
-
-    assemblage_t assemblage;
 
     vm_lookup_m.attach_to(sheet_m);
     vm_lookup_m.attach_to(sheet_m.machine_m);
@@ -159,7 +156,7 @@ dialog_result_t modal_dialog_t::go(std::istream& layout, std::istream& sheet)
     {
         name_t result_cell("result"_name);
 
-        attach_view(assemblage, result_cell, *this, sheet_m);
+        attach_view(assemblage_m, result_cell, *this, sheet_m);
 
         sheet_m.monitor_invariant_dependent(result_cell, boost::bind(&modal_dialog_t::monitor_invariant, boost::ref(*this), _1));
         sheet_m.monitor_contributing(result_cell, sheet_m.contributing(), boost::bind(&modal_dialog_t::monitor_record, boost::ref(*this), _1));
@@ -180,16 +177,20 @@ dialog_result_t modal_dialog_t::go(std::istream& layout, std::istream& sheet)
     {
         line_position_t::getline_proc_t getline_proc(new line_position_t::getline_proc_impl_t(boost::bind(&mdi_error_getline, boost::ref(layout), _1, _2)));
 
-        view_m.reset( make_view("eve definition"_name,
-                                getline_proc,
-                                layout,
-                                sheet_m,
-                                root_behavior_m,
-                                boost::bind(&modal_dialog_t::latch_callback, boost::ref(*this), _1, _2),
-                                size_normal_s,
-                                default_widget_factory_proc(),
-                                parent_m).release()
-                                );
+        view_m.reset(
+            make_view(
+                // TODO
+                "eve definition"_name,
+                getline_proc,
+                layout,
+                sheet_m,
+                root_behavior_m,
+                boost::bind(&modal_dialog_t::latch_button_callback, boost::ref(*this), _1, _2),
+                size_normal_s,
+                default_widget_factory_proc(),
+                parent_m
+            ).release()
+        );
 
         // Set up the view's sheet with display state values, etc.
         //
@@ -202,55 +203,22 @@ dialog_result_t modal_dialog_t::go(std::istream& layout, std::istream& sheet)
         //
         view_m->eve_m.evaluate(eve_t::evaluate_nested);
         view_m->show_window_m();
+    }
 
-#if ADOBE_PLATFORM_WIN
+    return view_m->root_display_m;
+}
 
-        /* TODO
-        HWND cntl(view_m->root_display_m);
+/****************************************************************************************************/
 
-        MSG  msg;
-
-        while ( ::GetMessage( &msg, 0, 0, 0 ) )
-        {
-            try
-            {
-                bool special_key_handled(false);
-
-                if (msg.message == WM_KEYDOWN || msg.message == WM_SYSKEYDOWN ||
-                    msg.message == WM_KEYUP   || msg.message == WM_SYSKEYUP)
-                {
-                    special_key_handled = keyboard_t::get().dispatch(key_type(msg.wParam),
-                                                                     msg.message == WM_KEYDOWN || msg.message == WM_SYSKEYDOWN,
-                                                                     modifier_state(),
-                                                                     any_regular_t(cntl));
-                }
-
-                if(special_key_handled == false && ::IsDialogMessage(cntl, &msg) == false)
-                {
-                    //
-                    // Pass the message through to the application.
-                    //
-                    TranslateMessage( &msg );
-                    DispatchMessage( &msg );
-                }
-            }
-            catch ( const std::exception& error )
-            {
-                std::cerr << "Exception: " << error.what() << std::endl;
-            }
-            catch ( ... )
-            {
-                std::cerr << "Exception: Unknown" << std::endl;
-            }
-
-            end_dialog();
-        }
-        */
-#endif
+dialog_result_t modal_dialog_t::go()
+{
+    if ((display_options_m == dialog_no_display_s && need_ui_m) ||
+        display_options_m == dialog_display_s) {
+        platform_display_type dlg = view_m->root_display_m;
+        // TODO dlg->Run();
+        // TODO: view_m->show_and_run_modal(); // TODO: Look in SlateApplication.cpp for an event loop impl.
         result_m.display_state_m = view_m->layout_sheet_m.contributing();
-
         view_m.reset(0);
-
     }
 
     return result_m;
@@ -258,48 +226,41 @@ dialog_result_t modal_dialog_t::go(std::istream& layout, std::istream& sheet)
 
 /****************************************************************************************************/
 
-bool modal_dialog_t::end_dialog()
-{
-    if (defer_view_close_m == false)
-        return false;
-
-#if ADOBE_PLATFORM_WIN
-
-    // TODO: This can probably just go away.
-    // TODO ::PostQuitMessage(0);
-
-#endif
-
-    return true;
-}
-
-/****************************************************************************************************/
-
-void modal_dialog_t::latch_callback(name_t action, const any_regular_t& value)
+bool modal_dialog_t::latch_button_callback(name_t action, const any_regular_t& value)
 try
 {
+    bool retval = false;
+
     assert(view_m);
     assert(callback_m);
 
-    if (action == "reset"_name)
-    {
+    if (action == "reset"_name) {
         sheet_m.set(contributing_m);
         sheet_m.update();
+    } else if (action == "cancel"_name) {
+        sheet_m.set(contributing_m);
+        sheet_m.update();
+        retval = true;
+    } else if (action == "ok"_name || button_callback_m(action, value)) {
+        retval = true;
     }
-    else if (callback_m(action, value))
-    {
-        result_m.terminating_action_m = action;
 
-        defer_view_close_m = true;
+    if (retval) {
+        result_m.terminating_action_m = action;
+        // TODO view_m->root_display_m->EndRun();
     }
+
+    return retval;
 }
 catch(const std::exception& error)
 {
-    std::cerr << "Exception (modal_dialog_t::latch_callback) : " << error.what() << std::endl;
+    std::cerr << "Exception (modal_dialog_t::latch_button_callback) : " << error.what() << std::endl;
+    return false;
 }
 catch(...)
 {
-    std::cerr << "Unknown exception (modal_dialog_t::latch_callback)" << std::endl;
+    std::cerr << "Unknown exception (modal_dialog_t::latch_button_callback)" << std::endl;
+    return false;
 }
 
 /****************************************************************************************************/
@@ -307,6 +268,27 @@ catch(...)
 void modal_dialog_t::display(const model_type& value)
 {
     result_m.command_m = value.cast<dictionary_t>();
+}
+
+/****************************************************************************************************/
+
+keyboard_t& modal_dialog_t::keyboard()
+{
+    return view_m->keyboard_m;
+}
+
+/****************************************************************************************************/
+
+const dialog_result_t& modal_dialog_t::result()
+{
+    return result_m;
+}
+
+/****************************************************************************************************/
+
+sheet_t& modal_dialog_t::sheet()
+{
+    return sheet_m;
 }
 
 /****************************************************************************************************/

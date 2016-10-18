@@ -15,10 +15,6 @@
 
 #include <utility>
 
-#if ADOBE_PLATFORM_WIN
-#include <windows.h>
-#endif
-
 #include <adobe/future/platform_primitives.hpp>
 #include <adobe/future/widgets/headers/factory.hpp>
 #include <adobe/future/widgets/headers/virtual_machine_extension.hpp>
@@ -157,6 +153,17 @@ typedef boost::function <bool (name_t, const any_regular_t&)> action_callback_t;
 /*!
     \ingroup modal_dialog_kit
 
+    The modal dialog interface now sports an API call back to the client
+    in the case when an unbound GG signal is emitted.
+*/
+typedef boost::function<
+    void (name_t widget_type_name, name_t signal_name, name_t widget_id, const any_regular_t&)
+> signal_notifier_t;
+
+/****************************************************************************************************/
+/*!
+    \ingroup modal_dialog_kit
+
     The class that does the heavy-lifting for the modal dialog kit.
 */
 class modal_dialog_t
@@ -167,23 +174,28 @@ public:
 
     modal_dialog_t();
 
-    dialog_result_t go(std::istream& layout, std::istream& sheet);
+    platform_display_type init(std::istream& layout, std::istream& sheet);
+
+    dialog_result_t go();
 
     dictionary_t            input_m;
     dictionary_t            record_m;
     dictionary_t            display_state_m;
     display_options_t       display_options_m;
-    action_callback_t       callback_m;
+    action_callback_t       button_callback_m;
+    signal_notifier_t       signal_notifier_m; // TODO
     boost::filesystem::path working_directory_m;
     platform_display_type   parent_m;
     vm_lookup_t             vm_lookup_m;
 
     /* Clients: no need to call these. */
-    bool end_dialog();
     void display(const model_type& value);
+    keyboard_t& keyboard();
+    const dialog_result_t& result();
+    sheet_t& sheet();
 
 private:
-    void              latch_callback(name_t action, const any_regular_t&);
+    bool              latch_button_callback(name_t action, const any_regular_t&);
 
     void              monitor_record(const dictionary_t& record_info);
     void              monitor_invariant(bool valid);
@@ -191,10 +203,10 @@ private:
     sheet_t           sheet_m;
     behavior_t        root_behavior_m;
     auto_view_t       view_m;
-    bool              defer_view_close_m;
     bool              need_ui_m;
     dialog_result_t   result_m;
     dictionary_t      contributing_m;
+    assemblage_t      assemblage_m;
 };
 
 /****************************************************************************************************/
@@ -253,15 +265,15 @@ private:
 
     \return a filled in dialog_result_t.
 */
-inline dialog_result_t handle_dialog(const dictionary_t&            input,
-                                     const dictionary_t&            record,
-                                     const dictionary_t&            display_state,
-                                     display_options_t              display_options,
-                                     std::istream&                  layout_definition,
-                                     std::istream&                  sheet_definition,
-                                     action_callback_t              callback,
-                                     const boost::filesystem::path& working_directory,
-                                     platform_display_type          parent=platform_display_type())
+inline dialog_result_t handle_dialog(dictionary_t const & input,
+                                     dictionary_t const & record,
+                                     dictionary_t const & display_state,
+                                     display_options_t display_options,
+                                     std::istream & layout_definition,
+                                     std::istream & sheet_definition,
+                                     action_callback_t button_callback,
+                                     boost::filesystem::path const & working_directory,
+                                     platform_display_type parent=platform_display_type())
 {
     assert ( !layout_definition.fail() );
     assert ( !sheet_definition.fail() );
@@ -272,11 +284,13 @@ inline dialog_result_t handle_dialog(const dictionary_t&            input,
     dialog.record_m = record;
     dialog.display_state_m = display_state;
     dialog.display_options_m = display_options;
-    dialog.callback_m = callback;
+    dialog.button_callback_m = button_callback;
     dialog.working_directory_m = working_directory;
     dialog.parent_m = parent;
 
-    return dialog.go(layout_definition, sheet_definition);
+    dialog.init(layout_definition/*TODO, "inline eve code"*/, sheet_definition/*, "inline adam code"*/);
+
+    return dialog.go();
 }
 
 /****************************************************************************************************/
