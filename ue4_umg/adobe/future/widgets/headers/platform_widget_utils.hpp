@@ -24,7 +24,7 @@ namespace implementation {
 
 /****************************************************************************************************/
 
-platform_display_type get_parent(platform_display_type control);
+Uroot_widget * get_root_widget (platform_display_type control);
 
 std::string get_window_title(platform_display_type window);
 
@@ -35,12 +35,12 @@ void set_control_bounds(platform_display_type control, const place_data_t& place
 /****************************************************************************************************/
 
 template <typename T>
-inline bool is_focused(T& control)
+inline bool is_focused(T const & control)
 { return is_focused(control.control_m); }
 
 template <>
-inline bool is_focused(platform_display_type& control)
-{ return false/*::GetFocus() == control*/; }
+inline bool is_focused(platform_display_type const & control)
+{ return control->HasKeyboardFocus(); }
 
 /****************************************************************************************************/
 
@@ -52,36 +52,10 @@ void throw_last_error_exception(const char* file, long line);
 
 /****************************************************************************************************/
 
-#if 0 // TODO
-//
-/// Win32's event mechanism is tweaked in that sometimes a parent of a widget is called when the user
-/// changes something about the widget. forward_message is intended to let the pertinent window have
-/// a stab at the event. We want to use the window's standard message handling system so we don't have
-/// to introduce any new event hierarchies.
-///
-/// /return true if the forward_result should be used as a return value; false otherwise.
-//
-
-bool forward_message(UINT message, WPARAM wParam, LPARAM lParam, LRESULT& forward_result);
-
-/****************************************************************************************************/
-#endif
-
-//
-/// Information on the uxtheme_type parameter's values is
-/// available in the "Parts and States" documentation here:
-/// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/shellcc/platform/commctls/userex/topics/partsandstates.asp
-//
-
-void set_font(platform_display_type window, int uxtheme_type);
-
-/****************************************************************************************************/
-
 inline void set_control_visible(platform_display_type control, bool make_visible)
 {
     assert(control);
-
-    // TODO ::ShowWindow(control, make_visible ? SW_SHOWNORMAL : SW_HIDE);
+    control->SetVisibility(make_visible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
 
 /****************************************************************************************************/
@@ -89,8 +63,7 @@ inline void set_control_visible(platform_display_type control, bool make_visible
 inline void set_control_enabled(platform_display_type control, bool make_enabled)
 {
     assert(control);
-
-    // TODO ::EnableWindow(control, make_enabled);
+    control->SetIsEnabled(make_enabled);
 }
 
 /****************************************************************************************************/
@@ -102,24 +75,6 @@ bool context_menu(platform_display_type parent,
                   name_t& result);
 
 /****************************************************************************************************/
-
-#if 0
-#if 1 // TODO
-void* /*LONG_PTR*/ get_user_reference(platform_display_type control);
-#endif
-
-/****************************************************************************************************/
-
-template <typename T>
-void set_user_reference(platform_display_type control, T data)
-{
-    assert(control);
-
-    // TODO ::SetWindowLongPtr(control, GWLP_USERDATA, hackery::cast<LONG>(data));
-}
-
-/****************************************************************************************************/
-#endif
 
 modifiers_t convert_modifiers(unsigned long/*ULONG*/ os_modifiers);
 modifiers_t convert_modifiers(char/*BYTE*/  keyboard_state[256]);

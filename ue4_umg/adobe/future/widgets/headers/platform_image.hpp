@@ -65,7 +65,7 @@ struct image_t : boost::noncopyable
 #if 1 // TODO
 void initialize(image_t& value, platform_display_type parent);
 
-inline platform_display_type & get_display(image_t & widget)
+inline platform_display_type get_display(image_t & widget)
 { return widget.control_m; }
 #endif
 

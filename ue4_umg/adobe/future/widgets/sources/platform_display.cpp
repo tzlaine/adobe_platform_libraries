@@ -41,15 +41,14 @@ platform_display_type insert(display_t& display, platform_display_type& position
 
 /****************************************************************************************************/
 
-template <>
-platform_display_type display_t::insert<platform_display_type>(platform_display_type& parent, const platform_display_type& element)
+platform_display_type display_t::insert(platform_display_type parent, platform_display_type element)
 {
     static const platform_display_type null_parent_s = platform_display_type();
 
     UCanvasPanelSlot * slot = nullptr;
     if (parent != null_parent_s) {// TODO && parent != get_main_display().root()) {
-        auto const parent_canvas = dynamic_cast<UCanvasPanel*>(parent->GetParent());
-        parent_canvas->AddChildToCanvas(element);
+        auto const root = implementation::get_root_widget(parent);
+        root->panel()->AddChildToCanvas(element);
     } else {
         // TODO: Create a Uroot_widget?
         throw std::runtime_error("TODO");

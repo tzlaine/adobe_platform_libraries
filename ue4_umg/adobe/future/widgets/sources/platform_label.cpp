@@ -11,7 +11,6 @@
 
 #include <adobe/future/widgets/headers/platform_label.hpp>
 
-
 #include <adobe/future/widgets/headers/display.hpp>
 #include <adobe/future/widgets/headers/widget_utils.hpp>
 #include <adobe/future/widgets/headers/platform_metrics.hpp>
@@ -37,9 +36,7 @@ label_t::label_t(const std::string& name,
 /****************************************************************************************************/
 
 label_t::~label_t()
-{
-    // TODO ::DestroyWindow(control_m);
-}
+{}
 
 /****************************************************************************************************/
 
@@ -57,62 +54,17 @@ void measure(label_t& value, extents_t& result)
 {
     assert(value.control_m);
 
-    /* TODO
-    metrics::set_window(value.control_m);
-    //
-    // If we don't have the type of this widget, then we should return a
-    // zero sized rectangle. This is usually correct, and a good assumption
-    // anyway.
-    //
-    int uxtheme_type = EP_EDITTEXT;
-    //
-    // Discover the size of the widget.
-    //
-    SIZE widget_size;
-    bool have_size = metrics::get_size(uxtheme_type, TS_DRAW, widget_size);
-    //
-    // Discover any margins of this widget.
-    //
-    MARGINS widget_margins;
-    bool have_margins = metrics::get_margins(uxtheme_type, widget_margins);
-    //
-    // Get the text metrics (and calculate the baseline of this widget)
-    //
-    TEXTMETRIC widget_tm;
-    bool have_tm = metrics::get_font_metrics(uxtheme_type, widget_tm);
-    //
-    // We need the text dimensions to figure out what the width of the widget should
-    // be.
-    //
-    RECT text_extents;
-    RECT in_extents = {0,0,10000,10000};
-    
-    if(value.characters_m){
-        std::wstring wrap(value.characters_m * 2, L'0');
-        bool have_extents = metrics::get_text_extents(uxtheme_type,
-            wrap.c_str(), text_extents, &in_extents);
-        assert(have_extents);
-        in_extents = text_extents;
-        in_extents.bottom = 10000;
+    FVector2D characters_extents(10000, 10000);
+    if (value.characters_m) {
+        std::string const text(value.characters_m * 2, '0');
+        characters_extents = metrics::get_text_extents(text, value.control_m->Font);
     }
-    
-    std::wstring wname;
-    to_utf16(value.name_m.begin(), value.name_m.end(), back_inserter(wname));
-    
-    bool have_extents = metrics::get_text_extents(uxtheme_type,
-        wname.c_str(), text_extents, &in_extents);
 
+    FVector2D const text_extents = metrics::get_text_extents(value.name_m, value.control_m->Font);
 
-    //
-    // Get any border the widget may have.
-    //
-    int border;
-    bool have_border = metrics::get_integer(uxtheme_type, TMT_BORDERSIZE, border);
-    //
-    // Now we can calculate the size we want to return.
-    //
-    result.horizontal().length_m = text_extents.right - text_extents.left;
-    */
+    result.horizontal().length_m = (std::min)(text_extents.X, characters_extents.X);
+    result.vertical().length_m = 10000;
+
     assert(result.horizontal().length_m);
 }
 
@@ -123,80 +75,30 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
 {
     assert(value.control_m);
 
-    /* TODO
-    RECT save_bounds;
+    value.control_m->MinDesiredWidth = width(placed_horizontal);
+    value.control_m->SynchronizeProperties();
+    FVector2D const desired_size = value.control_m->GetDesiredSize();
 
-    implementation::get_control_bounds(value.control_m, save_bounds);
+    extents_t::slice_t & vert = calculated_horizontal.vertical();
+    vert.length_m = desired_size.Y;
 
-    place_data_t static_bounds;
+    auto const scale = FSlateApplication::Get().GetApplicationScale();
+    const TSharedRef<FSlateFontMeasure> font_measure =
+        FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
 
-    top(static_bounds) = top(placed_horizontal);
-    left(static_bounds) = left(placed_horizontal);
-    width(static_bounds) = width(placed_horizontal);
-    height(static_bounds) = 10000; // bottomless
-
-    implementation::set_control_bounds(value.control_m, static_bounds);
-
-	HDC hdc(::GetWindowDC(value.control_m));
-    std::string title(implementation::get_window_title(value.control_m));
-
-    std::wstring wtitle;
-    to_utf16(title.begin(), title.end(), std::back_inserter(wtitle));
-    RECT out_extent;
-
-    //
-    // If we don't have the type of this widget, then we should return a
-    // zero sized rectangle. This is usually correct, and a good assumption
-    // anyway.
-    //
-    int uxtheme_type = EP_EDITTEXT;
-    //
-    // Get the text metrics (and calculate the baseline of this widget)
-    //
-    TEXTMETRIC widget_tm;
-    bool have_tm = metrics::get_font_metrics(uxtheme_type, widget_tm);
-
-    assert(have_tm);
-
-    const RECT in_extents =
-    {
-        left(static_bounds),
-        top(static_bounds),
-        right(static_bounds),
-        bottom(static_bounds)
-    };
-
-    bool have_extents = metrics::get_text_extents(uxtheme_type,
-        wtitle.c_str(), out_extent, &in_extents);
-    
-    assert(have_extents);
-
-    extents_t::slice_t& vert = calculated_horizontal.vertical();
-    vert.length_m = out_extent.bottom - out_extent.top;
-    // set the baseline for the text
- 
-    metrics::set_window(value.control_m);
-
-    if (have_tm)
-        // distance from top to baseline
-        vert.guide_set_m.push_back(widget_tm.tmHeight - widget_tm.tmDescent);
-
-    place_data_t restore_bounds;
-
-    top(restore_bounds) = save_bounds.top;
-    left(restore_bounds) = save_bounds.left;
-    width(restore_bounds) = save_bounds.right - save_bounds.left;
-    height(restore_bounds) = save_bounds.bottom - save_bounds.top;
-
-    implementation::set_control_bounds(value.control_m, restore_bounds);
-    */
+    long const baseline = font_measure->GetBaseline(value.control_m->Font, scale);
+    vert.guide_set_m.push_back(baseline);
+    // TODO: Originally this was:
+    // distance from top to baseline
+    // vert.guide_set_m.push_back(widget_tm.tmHeight - widget_tm.tmDescent);
+    // ... but the original code does not match what was in measure_text()
 }
 
 /****************************************************************************************************/
 
 void enable(label_t& value, bool make_enabled)
 {
-    // TODO ::EnableWindow(value.control_m, make_enabled);
+    set_control_enabled(value.control_m, make_enabled);
 }
 
 /****************************************************************************************************/
@@ -205,21 +107,17 @@ void initialize(label_t& label, platform_display_type parent)
 {
     assert(!label.control_m.widget_m);
 
-    /* TODO
-    label.control_m = ::CreateWindowExW(WS_EX_COMPOSITED, L"STATIC",
-                                       hackery::convert_utf(label.name_m).c_str(),
-                                       WS_CHILD | WS_VISIBLE,
-                                       0, 0, 100, 20,
-                                       parent,
-                                       NULL,
-                                       ::GetModuleHandle(NULL),
-                                       NULL);
-    */
+    auto root = implementation::get_root_widget(parent);
+
+    if (root == nullptr)
+        ADOBE_THROW_LAST_ERROR;
+
+    label.control_m = root->new_child<Ustyleable_text_block>().widget_;
 
     if (label.control_m == nullptr)
         ADOBE_THROW_LAST_ERROR;
 
-    // TODO set_font(label.control_m, EP_EDITTEXT);
+    label.control_m->SetText(FText::FromString(FString(label.name_m.c_str())));
 
     if (!label.alt_text_m.empty())
         implementation::set_control_alt_text(label.control_m, label.alt_text_m);
@@ -233,6 +131,10 @@ extents_t measure_text(const std::string& text, platform_display_type temp_paren
     extents_t result;
 
     measure_label_text(label, result, temp_parent);
+
+    label.control_m->RemoveFromParent();
+    delete label.control_m;
+    label.control_m = nullptr;
 
     return result;
 }

@@ -81,7 +81,7 @@ display_number_t::display_number_t(
 /****************************************************************************************************/
 
 #if 1 // TODO
-inline platform_display_type & get_display(display_number_t & widget)
+inline platform_display_type get_display(display_number_t & widget)
 { return widget.control_m; }
 #endif
 

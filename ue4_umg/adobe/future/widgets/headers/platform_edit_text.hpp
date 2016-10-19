@@ -102,7 +102,7 @@ inline std::string get_control_string(const edit_text_t& widget)
 }
 
 #if 1 // TODO
-inline platform_display_type & get_display(edit_text_t & widget)
+inline platform_display_type get_display(edit_text_t & widget)
 { return widget.control_m; }
 #endif
 

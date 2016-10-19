@@ -32,8 +32,7 @@ struct display_t
     platform_display_type root()
     { return root_m; }
 
-    template <typename DisplayElement>
-    platform_display_type insert(platform_display_type& parent, const DisplayElement& element);
+    platform_display_type insert(platform_display_type parent, platform_display_type element);
 
 private:
     platform_display_type root_m;
