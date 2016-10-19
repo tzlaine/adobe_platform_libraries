@@ -19,111 +19,6 @@
 
 /****************************************************************************************************/
 
-namespace {
-
-/****************************************************************************************************/
-
-std::pair<long, long> get_window_client_offsets(adobe::platform_display_type window)
-{
-    assert(window);
-
-    /* TODO
-    RECT    window_rect;
-    RECT    client_rect;
-
-    ::GetWindowRect(window, &window_rect);
-    ::GetClientRect(window, &client_rect);
-    */
-
-    long extra_width = 0;//(window_rect.right - window_rect.left) - (client_rect.right - client_rect.left);
-    long extra_height = 0;//(window_rect.bottom - window_rect.top) - (client_rect.bottom - client_rect.top);
-
-    return std::make_pair(extra_width, extra_height);
-}
-
-/****************************************************************************************************/
-
-/* TODO: Add this functionality in a platform-specific way.
-//
-/// This function is the main event handler for ui-core on Win32. It delegates
-/// most of the events it recieves to individual control instances, via the
-/// event_dispatch object.
-///
-/// \param  window  the window associated with the event.
-/// \param  message the Windows event type.
-/// \param  wParam  the pointer parameter.
-/// \param  lParam  the integer parameter.
-///
-/// \return zero, or whatever the default window handler returns.
-//
-LRESULT CALLBACK window_event_proc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    if (message == WM_SIZING)
-    {
-        adobe::window_t& imp(*reinterpret_cast<adobe::window_t*>(adobe::get_user_reference(window)));
-        RECT&            bounds(*hackery::cast<RECT*>(lParam));
-
-        if (imp.debounce_m == false && imp.resize_proc_m.empty() == false)
-        {
-            imp.debounce_m = true;
-
-            std::pair<long, long>   extra(get_window_client_offsets(window));
-            long                    width(bounds.right - bounds.left - extra.first);
-            long                    height(bounds.bottom - bounds.top - extra.second);
-
-            if (height < imp.min_size_m.y_m)
-            {
-                height = imp.min_size_m.y_m;
-                bounds.bottom = bounds.top + imp.min_size_m.y_m + extra.second;
-            }
-
-            if (width < imp.min_size_m.x_m)
-            {
-                width = imp.min_size_m.x_m;
-                bounds.right = bounds.left + imp.min_size_m.x_m + extra.first;
-            }
-
-            if (adobe::width(imp.place_data_m) != width || adobe::height(imp.place_data_m) != height)
-            {
-                imp.resize_proc_m(width, height);
-
-                adobe::width(imp.place_data_m) = width;
-                adobe::height(imp.place_data_m) = height;
-            }
-
-            imp.debounce_m = false;
-        }
-    }
-    else if (message == WM_KEYDOWN || message == WM_SYSKEYDOWN ||
-             message == WM_KEYUP   || message == WM_SYSKEYUP)
-    {
-        if (adobe::keyboard_t::get().dispatch(adobe::key_type(wParam),
-                                              message == WM_KEYDOWN || message == WM_SYSKEYDOWN,
-                                              adobe::modifier_state(),
-                                              adobe::any_regular_t(window)))
-            return 0;
-    }
-    else
-    {
-        //
-        // See if we can forward the message and handle it that way.
-        //
-        LRESULT forward_result(0);
-        if (adobe::forward_message(message, wParam, lParam, forward_result))
-            return forward_result;
-    }
-    //
-    // Pass it to the default window procedure.
-    //
-    return ::DefWindowProc(window, message, wParam, lParam);
-}
-*/
-/****************************************************************************************************/
-
-} // namespace
-
-/****************************************************************************************************/
-
 namespace adobe {
 
 /****************************************************************************************************/
@@ -132,7 +27,8 @@ window_t::window_t(const std::string&  name,
                    window_style_t style,
                    window_attributes_t attributes,
                    window_modality_t modality) :
-    window_m(0),
+    root_widget_m(nullptr),
+    window_m(nullptr),
     name_m(name),
     style_m(style),
     attributes_m(attributes),
@@ -145,18 +41,17 @@ window_t::window_t(const std::string&  name,
 
 window_t::~window_t()
 {
-    if (window_m) {
-        // TODO ::DestroyWindow(window_m);
+    if (root_widget_m) {
+        root_widget_m->RemoveFromParent();
+        delete root_widget_m;
     }
-
-    window_m = 0;
 }
 
 /****************************************************************************************************/
 
 void window_t::measure(extents_t& result)
 {
-    assert(window_m);
+    assert(root_widget_m);
 
     if (name_m.empty())
     {
@@ -175,7 +70,7 @@ void window_t::measure(extents_t& result)
 
 void window_t::place(const place_data_t& place_data)
 {
-    assert(window_m);
+    assert(root_widget_m);
 
     if (placed_once_m)
     {
@@ -187,20 +82,9 @@ void window_t::place(const place_data_t& place_data)
 
         place_data_m = place_data;
 
-        /* TODO
-        RECT                    window_rect;
-        std::pair<long, long>   extra(get_window_client_offsets(window_m));
-
-        min_size_m.x_m = width(place_data);
-        min_size_m.y_m = height(place_data);
-
-        ::GetWindowRect(window_m, &window_rect);
-
-        ::MoveWindow(   window_m, left(place_data) + window_rect.left,
-                        top(place_data) + window_rect.top,
-                        width(place_data) + extra.first,
-                        height(place_data) + extra.second, TRUE);
-        */
+        root_widget_m->SetPositionInViewport(FVector2D(left(place_data), top(place_data)));
+        root_widget_m->SetDesiredSizeInViewport(FVector2D(width(place_data), height(place_data)));
+        resize_proc_m(width(place_data), height(place_data));
     }
 }
 
@@ -208,7 +92,7 @@ void window_t::place(const place_data_t& place_data)
 
 void window_t::set_size(const point_2d_t& size)
 {
-    assert(window_m);
+    assert(root_widget_m);
 
     if (debounce_m)
         return;
@@ -218,62 +102,18 @@ void window_t::set_size(const point_2d_t& size)
     width(place_data_m) = size.x_m;
     height(place_data_m) = size.y_m;
 
-    /* TODO
-    RECT                    window_rect;
-    std::pair<long, long>   extra(get_window_client_offsets(window_m));
-
-    ::GetWindowRect(window_m, &window_rect);
-
-    ::SetWindowPos(window_m, 0, 0, 0,
-                   width(place_data_m) + extra.first,
-                   height(place_data_m) + extra.second,
-                   SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER );
-    */
+    root_widget_m->SetDesiredSizeInViewport(FVector2D(size.x_m, size.y_m));
+    resize_proc_m(size.x_m, size.y_m);
 
     debounce_m = false;
 }
 
 /****************************************************************************************************/
 
-void window_t::reposition(window_reposition_t position)
-{
-    assert(window_m);
-
-    /* TODO
-    RECT window_rect;
-
-    implementation::get_control_bounds(window_m, window_rect);
-
-    int width(window_rect.right - window_rect.left);
-    int height(window_rect.bottom - window_rect.top);
-
-    int sys_met_x(::GetSystemMetrics(SM_CXFULLSCREEN));
-    int sys_met_y(::GetSystemMetrics(SM_CYFULLSCREEN));
-    
-    int left(std::max<int>(10, (sys_met_x - width)/2));
-    int top;
-
-    if (position == window_reposition_center_s)
-        top = std::max<int>(10, (sys_met_y - height)/2);
-    else //if (position == window_reposition_alert_s)
-        top = std::max<int>(10, static_cast<int>((sys_met_y * .6 - height)/2));
-
-    ::MoveWindow(window_m, left, top, width, height, TRUE);
-    */
-}
-
-/****************************************************************************************************/
-
 void window_t::set_visible(bool make_visible)
 {
-    assert(window_m);
-
-    if (false)//TODO IsWindowVisible(window_m) == false)
-        reposition(window_reposition_center_s);
-
-    window_m->SetVisibility(make_visible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
-
-    // TODO ::EnableWindow(window_m, make_visible);
+    assert(root_widget_m);
+    root_widget_m->SetVisibility(make_visible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
 
 /****************************************************************************************************/
@@ -290,30 +130,44 @@ platform_display_type insert<window_t>(display_t& display,
                                        platform_display_type& parent,
                                        window_t& element)
 {
-    assert(!element.window_m);
+    assert(!element.root_widget_m);
 
-    /* TODO
-    DWORD platform_style(WS_OVERLAPPED | WS_CAPTION | WS_BORDER);
-    DWORD dialog_extended_style = WS_EX_WINDOWEDGE | WS_EX_DLGMODALFRAME | WS_EX_COMPOSITED;
+    element.root_widget_m = CreateWidget<Uroot_widget>(GEngine->GetWorld(), Uroot_widget::StaticClass());
 
-    if (element.attributes_m & (window_attributes_resizeable_s | window_attributes_live_resizeable_s))
-        platform_style |= WS_SIZEBOX;
-
-    element.window_m = ::CreateWindowExW(dialog_extended_style,
-                                         L"eve_dialog",
-                                         hackery::convert_utf(element.name_m).c_str(),
-                                         platform_style,    
-                                         10, 10, 20, 20,
-                                         parent_hwnd,
-                                         NULL,
-                                         ::GetModuleHandle(NULL),
-                                         NULL);
-
-    if (element.window_m == NULL)
+    if (!element.root_widget_m)
         ADOBE_THROW_LAST_ERROR;
 
-    set_user_reference(element.window_m, &element);
-    */
+    element.root_widget_m->SetAnchorsInViewport(FAnchors(0, 0, 0, 0));
+
+    element.window_m = element.root_widget_m->panel();
+
+    if (!element.window_m)
+        ADOBE_THROW_LAST_ERROR;
+
+    element.root_widget_m->set_resize_callback(
+        [&element](long width, long height) {
+            if (element.debounce_m == false && element.resize_proc_m) {
+                element.debounce_m = true;
+
+                if (height < element.min_size_m.y_m)
+                    height = element.min_size_m.y_m;
+
+                if (width < element.min_size_m.x_m)
+                    width = element.min_size_m.x_m;
+
+                if (adobe::width(element.place_data_m) != width ||
+                    adobe::height(element.place_data_m) != height)
+                {
+                    element.resize_proc_m(width, height);
+
+                    adobe::width(element.place_data_m) = width;
+                    adobe::height(element.place_data_m) = height;
+                }
+
+                element.debounce_m = false;
+            }
+        }
+    );
 
     return display.insert(parent, element.window_m);
 }

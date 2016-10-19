@@ -47,18 +47,16 @@ struct window_t
 
     void set_size(const point_2d_t& size);
 
-    void reposition(window_reposition_t position);
- 
     void monitor_resize(const window_resize_proc_t& proc);
 
     any_regular_t underlying_handler() { return any_regular_t(window_m); }
 
     bool handle_key(key_type /*key*/, bool /*pressed*/, modifiers_t /*modifiers*/)
-        { return false; }
+    { return false; }
 
-#if 1 // TODO
+    Uroot_widget * root_widget_m;
     platform_display_type window_m;
-#endif
+
     std::string          name_m;
     window_style_t       style_m;
     window_attributes_t  attributes_m;
