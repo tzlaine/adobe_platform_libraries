@@ -49,9 +49,6 @@ platform_display_type display_t::insert(platform_display_type parent, platform_d
     if (parent != null_parent_s) {// TODO && parent != get_main_display().root()) {
         auto const root = implementation::get_root_widget(parent);
         root->panel()->AddChildToCanvas(element);
-    } else {
-        // TODO: Create a Uroot_widget?
-        throw std::runtime_error("TODO");
     }
 
     return element;

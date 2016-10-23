@@ -54,8 +54,7 @@ struct window_t
     bool handle_key(key_type /*key*/, bool /*pressed*/, modifiers_t /*modifiers*/)
     { return false; }
 
-    Uroot_widget * root_widget_m;
-    platform_display_type window_m;
+    Uroot_widget * window_m;
 
     std::string          name_m;
     window_style_t       style_m;
@@ -66,6 +65,8 @@ struct window_t
     bool                 debounce_m;
     point_2d_t           min_size_m;
     bool                 placed_once_m;
+
+    static UWorld * create_widget_world_;
 };
 
 /****************************************************************************************************/

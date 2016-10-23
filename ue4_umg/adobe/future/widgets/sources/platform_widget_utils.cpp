@@ -56,7 +56,7 @@ void set_control_alt_text(platform_display_type control, const std::string& alt_
 
 Uroot_widget * get_root_widget (platform_display_type control)
 {
-    Uroot_widget * retval = nullptr;
+    Uroot_widget * retval = dynamic_cast<Uroot_widget *>(control);
     platform_display_type parent = control;
     while (parent && !retval) {
         parent = parent->GetParent();

@@ -23,11 +23,14 @@ namespace adobe {
 
 /****************************************************************************************************/
 
+UWorld * window_t::create_widget_world_ = nullptr;
+
+/****************************************************************************************************/
+
 window_t::window_t(const std::string&  name,
                    window_style_t style,
                    window_attributes_t attributes,
                    window_modality_t modality) :
-    root_widget_m(nullptr),
     window_m(nullptr),
     name_m(name),
     style_m(style),
@@ -41,9 +44,9 @@ window_t::window_t(const std::string&  name,
 
 window_t::~window_t()
 {
-    if (root_widget_m) {
-        root_widget_m->RemoveFromParent();
-        delete root_widget_m;
+    if (window_m) {
+        window_m->RemoveFromParent();
+        delete window_m;
     }
 }
 
@@ -51,7 +54,7 @@ window_t::~window_t()
 
 void window_t::measure(extents_t& result)
 {
-    assert(root_widget_m);
+    assert(window_m);
 
     if (name_m.empty())
     {
@@ -70,7 +73,7 @@ void window_t::measure(extents_t& result)
 
 void window_t::place(const place_data_t& place_data)
 {
-    assert(root_widget_m);
+    assert(window_m);
 
     if (placed_once_m)
     {
@@ -82,8 +85,8 @@ void window_t::place(const place_data_t& place_data)
 
         place_data_m = place_data;
 
-        root_widget_m->SetPositionInViewport(FVector2D(left(place_data), top(place_data)));
-        root_widget_m->SetDesiredSizeInViewport(FVector2D(width(place_data), height(place_data)));
+        window_m->SetPositionInViewport(FVector2D(left(place_data), top(place_data)));
+        window_m->SetDesiredSizeInViewport(FVector2D(width(place_data), height(place_data)));
         resize_proc_m(width(place_data), height(place_data));
     }
 }
@@ -92,7 +95,7 @@ void window_t::place(const place_data_t& place_data)
 
 void window_t::set_size(const point_2d_t& size)
 {
-    assert(root_widget_m);
+    assert(window_m);
 
     if (debounce_m)
         return;
@@ -102,7 +105,7 @@ void window_t::set_size(const point_2d_t& size)
     width(place_data_m) = size.x_m;
     height(place_data_m) = size.y_m;
 
-    root_widget_m->SetDesiredSizeInViewport(FVector2D(size.x_m, size.y_m));
+    window_m->SetDesiredSizeInViewport(FVector2D(size.x_m, size.y_m));
     resize_proc_m(size.x_m, size.y_m);
 
     debounce_m = false;
@@ -112,8 +115,8 @@ void window_t::set_size(const point_2d_t& size)
 
 void window_t::set_visible(bool make_visible)
 {
-    assert(root_widget_m);
-    root_widget_m->SetVisibility(make_visible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+    assert(window_m);
+    window_m->SetVisibility(make_visible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
 
 /****************************************************************************************************/
@@ -130,21 +133,19 @@ platform_display_type insert<window_t>(display_t& display,
                                        platform_display_type& parent,
                                        window_t& element)
 {
-    assert(!element.root_widget_m);
+    assert(!element.window_m);
 
-    element.root_widget_m = CreateWidget<Uroot_widget>(GEngine->GetWorld(), Uroot_widget::StaticClass());
-
-    if (!element.root_widget_m)
-        ADOBE_THROW_LAST_ERROR;
-
-    element.root_widget_m->SetAnchorsInViewport(FAnchors(0, 0, 0, 0));
-
-    element.window_m = element.root_widget_m->panel();
+    element.window_m = CreateWidget<Uroot_widget>(window_t::create_widget_world_, Uroot_widget::StaticClass());
 
     if (!element.window_m)
         ADOBE_THROW_LAST_ERROR;
 
-    element.root_widget_m->set_resize_callback(
+    element.window_m->SetAnchorsInViewport(FAnchors(0, 0, 0, 0));
+
+    if (!element.window_m)
+        ADOBE_THROW_LAST_ERROR;
+
+    element.window_m->set_resize_callback(
         [&element](long width, long height) {
             if (element.debounce_m == false && element.resize_proc_m) {
                 element.debounce_m = true;
