@@ -142,7 +142,7 @@ inline eve_t::iterator attach_placeable(eve_t::iterator     parent_token,
     return token.client_holder_m.eve_m.add_placeable(   parent_token,
                                                         attributes,
                                                         is_container,
-                                                        poly_cast<poly_placeable_t&>(*element));
+                                                        *element);
 }
 
 /*************************************************************************************************/
