@@ -76,17 +76,18 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
     assert(value.control_m);
 
     value.control_m->MinDesiredWidth = width(placed_horizontal);
+    value.control_m->TakeWidget();
     value.control_m->SynchronizeProperties();
+    value.control_m->ForceLayoutPrepass();
     FVector2D const desired_size = value.control_m->GetDesiredSize();
 
     extents_t::slice_t & vert = calculated_horizontal.vertical();
     vert.length_m = desired_size.Y;
 
-    auto const scale = FSlateApplication::Get().GetApplicationScale();
     const TSharedRef<FSlateFontMeasure> font_measure =
         FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
 
-    long const baseline = font_measure->GetBaseline(value.control_m->Font, scale);
+    long const baseline = font_measure->GetBaseline(value.control_m->Font, 1.0f);
     vert.guide_set_m.push_back(baseline);
     // TODO: Originally this was:
     // distance from top to baseline

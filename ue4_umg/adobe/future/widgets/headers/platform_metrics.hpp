@@ -39,10 +39,9 @@ namespace metrics {
 
 inline FVector2D get_text_extents(std::string const & text, FSlateFontInfo const & font_info)
 {
-    auto const scale = FSlateApplication::Get().GetApplicationScale();
     const TSharedRef<FSlateFontMeasure> font_measure =
         FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
-    return font_measure->Measure(FText::FromString(text.c_str()), font_info, scale);
+    return font_measure->Measure(FText::FromString(text.c_str()), font_info, 1.0f);
 }
 
 /****************************************************************************************************/
@@ -69,7 +68,6 @@ extents_t measure_text(std::string const & text, Control const & control, FSlate
 {
     extents_t result;
 
-    auto const scale = FSlateApplication::Get().GetApplicationScale();
     const TSharedRef<FSlateFontMeasure> font_measure =
         FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
 
@@ -90,12 +88,12 @@ extents_t measure_text(std::string const & text, Control const & control, FSlate
     // text plus the top margin, plus (widget height - text height)/2.
     //
 
-    long const text_height = font_measure->GetMaxCharacterHeight(font_info, scale);
+    long const text_height = font_measure->GetMaxCharacterHeight(font_info, 1.0f);
 
     long const widget_width = widget_size.X;
     long const widget_height = widget_size.Y;
 
-    long baseline = font_measure->GetBaseline(font_info, scale);
+    long baseline = font_measure->GetBaseline(font_info, 1.0f);
     baseline += (std::max)(0l, (widget_height - text_height) / 2);
 
     result.slice_m[extents_slices_t::vertical].guide_set_m.push_back(baseline);
