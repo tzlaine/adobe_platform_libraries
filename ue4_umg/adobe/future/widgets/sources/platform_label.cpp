@@ -75,7 +75,7 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
 {
     assert(value.control_m);
 
-    value.control_m->MinDesiredWidth = width(placed_horizontal);
+    value.control_m->set_wrap_width(width(placed_horizontal));
     value.control_m->TakeWidget();
     value.control_m->SynchronizeProperties();
     value.control_m->ForceLayoutPrepass();
