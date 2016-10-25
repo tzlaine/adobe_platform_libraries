@@ -76,11 +76,15 @@ std::string get_window_title(platform_display_type window)
 
 /****************************************************************************************************/
 
-void get_control_bounds(platform_display_type control, int/*RECT*/& bounds)
+void get_control_bounds(platform_display_type control, FBox2D & bounds)
 {
     assert(control);
 
-    // TODO ::GetWindowRect(control, &bounds);
+    auto const slot = Cast<UCanvasPanelSlot>(control->Slot);
+    auto const pos = slot->GetPosition();
+    auto const size = slot->GetSize();
+
+    bounds = FBox2D(pos, pos + size);
 }
 
 /****************************************************************************************************/
@@ -89,7 +93,9 @@ void set_control_bounds(platform_display_type control, const place_data_t& place
 {
     assert(control);
 
-    // TODO ::MoveWindow(control, left(place_data), top(place_data), width(place_data), height(place_data), TRUE);
+    auto const slot = Cast<UCanvasPanelSlot>(control->Slot);
+    slot->SetPosition(FVector2D(left(place_data), top(place_data)));
+    slot->SetSize(FVector2D(width(place_data), height(place_data)));
 }
 
 /****************************************************************************************************/

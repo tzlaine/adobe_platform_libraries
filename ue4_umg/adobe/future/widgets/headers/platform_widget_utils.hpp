@@ -28,7 +28,7 @@ Uroot_widget * get_root_widget (platform_display_type control);
 
 std::string get_window_title(platform_display_type window);
 
-void get_control_bounds(platform_display_type control, int/*RECT*/& bounds);
+void get_control_bounds(platform_display_type control, FBox2D & bounds);
 
 void set_control_bounds(platform_display_type control, const place_data_t& place_data);
 
