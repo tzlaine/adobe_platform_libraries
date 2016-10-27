@@ -35,13 +35,44 @@ namespace metrics {
 
 /****************************************************************************************************/
 
+namespace detail {
+
+/****************************************************************************************************/
+
+float measurement_size (FSlateFontInfo const & font_info);
+
+/****************************************************************************************************/
+
+}
+
+/****************************************************************************************************/
+
 /// Get the extents for the given text string, in the specified font.
 
 inline FVector2D get_text_extents(std::string const & text, FSlateFontInfo const & font_info)
 {
     const TSharedRef<FSlateFontMeasure> font_measure =
         FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
-    return font_measure->Measure(FText::FromString(text.c_str()), font_info, 1.0f);
+    return font_measure->Measure(
+        FText::FromString(text.c_str()),
+        font_info,
+        detail::measurement_size(font_info)
+    );
+}
+
+/****************************************************************************************************/
+
+inline float measure_baseline(TSharedRef<FSlateFontMeasure> const & font_measure,
+                              FSlateFontInfo const & font_info)
+{ return std::abs(font_measure->GetBaseline(font_info, detail::measurement_size(font_info))); }
+
+/****************************************************************************************************/
+
+inline float measure_baseline(FSlateFontInfo const & font_info)
+{
+    TSharedRef<FSlateFontMeasure> const font_measure =
+        FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
+    return measure_baseline(font_measure, font_info);
 }
 
 /****************************************************************************************************/
@@ -59,7 +90,7 @@ FVector2D get_size(struct group_t const & control);
 
 template <typename Control>
 FVector2D get_size(Control const & control)
-{ return FVector2D(); }
+{ return FVector2D(0, 0); }
 
 /****************************************************************************************************/
 
@@ -88,12 +119,13 @@ extents_t measure_text(std::string const & text, Control const & control, FSlate
     // text plus the top margin, plus (widget height - text height)/2.
     //
 
-    long const text_height = font_measure->GetMaxCharacterHeight(font_info, 1.0f);
+    long const text_height =
+        font_measure->GetMaxCharacterHeight(font_info, detail::measurement_size(font_info));
 
     long const widget_width = widget_size.X;
     long const widget_height = widget_size.Y;
 
-    long baseline = std::abs(font_measure->GetBaseline(font_info, 1.0f));
+    long baseline = measure_baseline(font_measure, font_info);
     baseline += std::max(0l, (widget_height - text_height) / 2);
 
     result.slice_m[extents_slices_t::vertical].guide_set_m.push_back(baseline);

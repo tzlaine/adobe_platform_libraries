@@ -36,7 +36,7 @@ label_t::label_t(const std::string& name,
 /****************************************************************************************************/
 
 label_t::~label_t()
-{}
+{ }
 
 /****************************************************************************************************/
 
@@ -84,10 +84,7 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
     extents_t::slice_t & vert = calculated_horizontal.vertical();
     vert.length_m = desired_size.Y;
 
-    const TSharedRef<FSlateFontMeasure> font_measure =
-        FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
-
-    long const baseline = std::abs(font_measure->GetBaseline(value.control_m->Font, 1.0f));
+    long const baseline = metrics::measure_baseline(value.control_m->Font);
     vert.guide_set_m.push_back(baseline);
     // TODO: Originally this was:
     // distance from top to baseline

@@ -62,8 +62,6 @@ button_t::button_t(bool is_default, bool is_cancel) :
 
 void button_t::measure(extents_t& result)
 {
-    result = extents_t();
-
     button_state_set_t::iterator state(button_modifier_state(state_set_m,
                                                              modifier_mask_m,
                                                              modifiers_m));
@@ -72,7 +70,8 @@ void button_t::measure(extents_t& result)
         state = button_default_state(state_set_m);
 
     extents_t cur_text_extents(measure_text(state->name_m, control_text_m));
-    result.slice_m[extents_slices_t::vertical] = cur_text_extents.slice_m[extents_slices_t::vertical];
+
+    result = cur_text_extents;
 
     result.width() -= cur_text_extents.width();
     result.height() -= cur_text_extents.height();
