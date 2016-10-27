@@ -87,7 +87,7 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
     const TSharedRef<FSlateFontMeasure> font_measure =
         FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
 
-    long const baseline = font_measure->GetBaseline(value.control_m->Font, 1.0f);
+    long const baseline = std::abs(font_measure->GetBaseline(value.control_m->Font, 1.0f));
     vert.guide_set_m.push_back(baseline);
     // TODO: Originally this was:
     // distance from top to baseline
@@ -106,7 +106,7 @@ void enable(label_t& value, bool make_enabled)
 
 void initialize(label_t& label, platform_display_type parent)
 {
-    assert(!label.control_m.widget_m);
+    assert(!label.control_m);
 
     auto root = implementation::get_root_widget(parent);
 
@@ -126,31 +126,22 @@ void initialize(label_t& label, platform_display_type parent)
 
 /****************************************************************************************************/
 
-extents_t measure_text(const std::string& text, platform_display_type temp_parent)
+extents_t measure_text(const std::string& text, UTextBlock * text_block)
 {
-    label_t label(text, std::string(), 0);
-    extents_t result;
-
-    measure_label_text(label, result, temp_parent);
-
-    label.control_m->RemoveFromParent();
-    delete label.control_m;
-    label.control_m = nullptr;
-
-    return result;
+    assert(text_block);
+    label_t temp(std::string(), std::string(), 0);
+    return metrics::measure_text(text, temp, text_block->Font);
 }
 
 /****************************************************************************************************/
 
-void measure_label_text(const label_t& label, extents_t& result, platform_display_type temp_parent)
+void measure_label_text(const label_t& label, extents_t& result)
 {
     label_t& temp(const_cast<label_t&>(label));
 
-    if (temp.control_m == nullptr)
-        initialize(temp, temp_parent);
+    assert(temp.control_m);
 
     measure(temp, result);
-
     place_data_t p;
     p.horizontal().length_m = result.width();
     measure_vertical(temp, result, p);

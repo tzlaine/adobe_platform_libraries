@@ -60,7 +60,11 @@ typedef boost::function<void (const any_regular_t&, const dictionary_t&)> button
 
 /****************************************************************************************************/
 
-/*!
+typedef boost::function<void (const any_regular_t&)> button_hit_signal_proc_t;
+
+/****************************************************************************************************/
+
+ /*!
     \ingroup apl_widgets_button_helper
 
     A button_t widget is a collection of latches, each with its own
@@ -95,6 +99,8 @@ struct button_state_descriptor_t
 
     /*! The notification proc to be called when this state is fired. */
     button_hit_proc_t hit_proc_m;
+
+    button_hit_signal_proc_t clicked_proc_m;
 
     /*! (used internally) The retained state of the property model for this button state */
     any_regular_t value_m;

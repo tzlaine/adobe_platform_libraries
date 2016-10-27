@@ -59,7 +59,7 @@ void window_t::measure(extents_t& result)
         return;
     }
 
-    result = measure_text(name_m, window_m);
+    // TODO (restore if there is an explcit window type with a title) result = measure_text(name_m, window_m);
 
     result.width() = static_cast<long>(result.width() * 1.5);
 }

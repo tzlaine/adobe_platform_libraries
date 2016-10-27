@@ -93,8 +93,8 @@ extents_t measure_text(std::string const & text, Control const & control, FSlate
     long const widget_width = widget_size.X;
     long const widget_height = widget_size.Y;
 
-    long baseline = font_measure->GetBaseline(font_info, 1.0f);
-    baseline += (std::max)(0l, (widget_height - text_height) / 2);
+    long baseline = std::abs(font_measure->GetBaseline(font_info, 1.0f));
+    baseline += std::max(0l, (widget_height - text_height) / 2);
 
     result.slice_m[extents_slices_t::vertical].guide_set_m.push_back(baseline);
 
@@ -102,7 +102,7 @@ extents_t measure_text(std::string const & text, Control const & control, FSlate
     result.height() += widget_height;
 
     result.width() += text_extents.X;
-    result.height() = (std::max)(result.height(), text_height);
+    result.height() = std::max<int>(result.height(), text_height);
 
     return result;
 }

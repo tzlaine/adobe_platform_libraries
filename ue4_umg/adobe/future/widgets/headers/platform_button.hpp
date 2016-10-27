@@ -10,6 +10,9 @@
 
 /****************************************************************************************************/
 
+#include "widgets/styleable_button.h"
+#include "widgets/styleable_text_block.h"
+
 #include <adobe/config.hpp>
 
 #include <adobe/layout_attributes.hpp>
@@ -29,11 +32,7 @@ struct button_t : boost::noncopyable
 {
     typedef any_regular_t model_type;
 
-    button_t(bool                             is_default,
-             bool                             is_cancel,
-             modifiers_t               modifier_mask,
-             const button_state_descriptor_t* first,
-             const button_state_descriptor_t* last);
+    button_t(bool is_default, bool is_cancel);
 
     void measure(extents_t& result);
 
@@ -51,9 +50,9 @@ struct button_t : boost::noncopyable
 
     bool handle_key(key_type key, bool pressed, modifiers_t modifiers);
 
-#if 1 // TODO
-    platform_display_type control_m;
-#endif
+    Ustyleable_button * control_m;
+    Ustyleable_text_block * control_text_m;
+
     button_state_set_t state_set_m;
     modifiers_t        modifier_mask_m;
     modifiers_t        modifiers_m;

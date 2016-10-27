@@ -120,7 +120,7 @@ void edit_text_t::measure(extents_t& result)
         return;
 
     extents_t label_bounds;
-    measure_label_text(get_label(), label_bounds, control_m);
+    measure_label_text(get_label(), label_bounds);
     //
     // Make sure that the height can accomodate both the label
     // and the edit widget.

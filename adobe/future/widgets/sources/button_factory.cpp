@@ -107,20 +107,52 @@ void proxy_button_hit(  adobe::button_notifier_t    notifier,
 
 /*************************************************************************************************/
 
-template <typename Cont>
-void state_set_push_back(Cont& state_set, const adobe::factory_token_t& token, const button_item_t& temp)
+void state_set_push_back(adobe::button_t& button,
+                         const adobe::factory_token_t& token,
+                         const button_item_t& temp,
+                         const adobe::widget_factory_t& factory)
 {
-    state_set.push_back(adobe::button_state_descriptor_t());
+    button.state_set_m.push_back(adobe::button_state_descriptor_t());
 
-    state_set.back().name_m         = temp.name_m;
-    state_set.back().alt_text_m     = temp.alt_text_m;
-    state_set.back().modifier_set_m = temp.modifier_set_m;
-    state_set.back().hit_proc_m     = boost::bind(&proxy_button_hit, token.notifier_m,
-                                                    boost::ref(token.sheet_m), temp.bind_m,
-                                                    temp.bind_output_m,
-                                                    temp.action_m, _1, _2);
-    state_set.back().value_m        = temp.value_m;
-    state_set.back().contributing_m = temp.contributing_m;
+    button.state_set_m.back().name_m         = temp.name_m;
+    button.state_set_m.back().alt_text_m     = temp.alt_text_m;
+    button.state_set_m.back().modifier_set_m = temp.modifier_set_m;
+
+#if 1 // TODO
+    button.state_set_m.back().hit_proc_m     =
+        boost::bind(&proxy_button_hit,
+                    token.notifier_m,
+                    boost::ref(token.sheet_m),
+                    temp.bind_m,
+                    temp.bind_output_m,
+                    temp.action_m,
+                    _1,
+                    _2);
+#else
+    button.state_set_m.back().hit_proc_m     =
+        boost::bind(&proxy_button_hit,
+                    token,
+                    temp.bind_m,
+                    temp.bind_output_m,
+                    temp.action_m,
+                    _1,
+                    _2,
+                    boost::cref(factory));
+#endif
+
+#if 0 // TODO
+    button.state_set_m.back().clicked_proc_m =
+        boost::bind(&handle_clicked_signal,
+                    token.signal_notifier_m,
+                    temp.signal_id_m,
+                    boost::ref(token.sheet_m),
+                    temp.bind_signal_m,
+                    temp.expression_m,
+                    _1);
+#endif
+
+    button.state_set_m.back().value_m        = temp.value_m;
+    button.state_set_m.back().contributing_m = temp.contributing_m;
 }
 
 /****************************************************************************************************/
@@ -178,18 +210,14 @@ namespace implementation {
 
 /****************************************************************************************************/
 
-button_t* create_button_widget(const dictionary_t&    parameters,
-                               const factory_token_t& token,
-                               size_enum_t            size);
-
-button_t* create_button_widget(const dictionary_t&    parameters,
-                               const factory_token_t& token,
-                               size_enum_t            size)
+button_t* create_button_widget(const dictionary_t&     parameters,
+                               const factory_token_t&  token,
+                               size_enum_t             size,
+                               const widget_factory_t& factory)
 {
     bool               is_cancel(false);
     bool               is_default(false);
     modifiers_t        modifier_mask(modifiers_none_s);
-    button_state_set_t state_set;
     array_t            items;
     button_item_t      item;
 
@@ -203,22 +231,24 @@ button_t* create_button_widget(const dictionary_t&    parameters,
     get_value(parameters, key_default,     is_default);
     get_value(parameters, key_cancel,      is_cancel);
 
-    for (array_t::const_iterator iter(items.begin()), last(items.end()); iter != last; ++iter)
-        state_set_push_back(state_set, token, button_item_t(item, iter->cast<dictionary_t>()));
+    button_t* result = new button_t(is_default, is_cancel);
 
-    bool state_set_originally_empty(state_set.empty());
+    for (array_t::const_iterator iter(items.begin()), last(items.end()); iter != last; ++iter) {
+        state_set_push_back(*result,
+                            token,
+                            button_item_t(item, iter->cast<dictionary_t>()),
+                            factory);
+    }
+
+    bool state_set_originally_empty(result->state_set_m.empty());
 
     if (state_set_originally_empty)
-        state_set_push_back(state_set, token, item);
+        state_set_push_back(*result, token, item, factory);
 
-    for (button_state_set_t::const_iterator first(state_set.begin()), last(state_set.end()); first != last; ++first)
+    for (button_state_set_t::const_iterator first(result->state_set_m.begin()), last(result->state_set_m.end()); first != last; ++first)
         modifier_mask |= first->modifier_set_m;
 
-    button_state_descriptor_t* first_state(state_set.empty() ? 0 : &state_set[0]);
-    std::size_t                n(state_set.size());
-
-    button_t* result = new button_t(is_default, is_cancel, modifier_mask,
-                                    first_state, first_state + n);
+    result->modifier_mask_m = modifier_mask;
 
     for (array_t::const_iterator iter(items.begin()), last(items.end()); iter != last; ++iter)
     {
@@ -258,7 +288,7 @@ widget_node_t make_button(const dictionary_t&     parameters,
                        implementation::enumerate_size(get_value(parameters, key_size).cast<name_t>()) :
                        parent.size_m);
 
-    button_t* widget = implementation::create_button_widget(parameters, token, size);
+    button_t* widget = implementation::create_button_widget(parameters, token, size, factory);
     token.client_holder_m.assemblage_m.cleanup(boost::bind(delete_ptr(),widget));
    
     //

@@ -45,9 +45,9 @@ namespace adobe {
 
     void initialize(label_t& value, platform_display_type parent);
 
-    void measure_label_text(const label_t& label, extents_t& result, platform_display_type temp_parent);
+    void measure_label_text(const label_t& label, extents_t& result);
 
-    extents_t measure_text(const std::string& text, platform_display_type temp_parent);
+    extents_t measure_text(const std::string& text, UTextBlock * text_block);
 
     std::string get_control_string(const label_t& widget);
 
