@@ -50,7 +50,7 @@ widget_node_t sublayout_t::evaluate(const std::string&       sheet_description,
 
     platform_display_type display_root = get_display(root_m);
 
-    sublayout_holder_m = make_view("sublayout layout"_name,
+    sublayout_holder_m = make_view("sublayout layout",
                                    line_position_t::getline_proc_t(),
                                    layout_stream,
                                    sublayout_sheet_m,

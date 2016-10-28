@@ -174,7 +174,10 @@ public:
 
     modal_dialog_t();
 
-    platform_display_type init(std::istream& layout, std::istream& sheet);
+    platform_display_type init (std::istream & layout,
+                                std::string const & layout_source,
+                                std::istream & sheet,
+                                std::string const & sheet_source);
 
     dialog_result_t go();
 
@@ -294,7 +297,7 @@ inline dialog_result_t handle_dialog(dictionary_t const & input,
     dialog.working_directory_m = working_directory;
     dialog.parent_m = parent;
 
-    dialog.init(layout_definition/*TODO, "inline eve code"*/, sheet_definition/*, "inline adam code"*/);
+    dialog.init(layout_definition, "inline eve layout", sheet_definition, "inline adam sheet");
 
     return dialog.go();
 }

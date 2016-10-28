@@ -95,7 +95,10 @@ modal_dialog_t::modal_dialog_t() :
 
 /****************************************************************************************************/
 
-platform_display_type modal_dialog_t::init(std::istream& layout, std::istream& sheet)
+platform_display_type modal_dialog_t::init (std::istream & layout,
+                                            std::string const & layout_source,
+                                            std::istream & sheet,
+                                            std::string const & sheet_source)
 {
     resource_context_t res_context(working_directory_m);
 
@@ -110,7 +113,7 @@ platform_display_type modal_dialog_t::init(std::istream& layout, std::istream& s
 
     try
     {
-        parse( sheet, line_position_t( "Proprty model sheet definition" ), bind_to_sheet( sheet_m ) );
+        parse( sheet, line_position_t(sheet_source.c_str()), bind_to_sheet( sheet_m ) );
     }
     catch (const stream_error_t& error)
     {
@@ -179,7 +182,7 @@ platform_display_type modal_dialog_t::init(std::istream& layout, std::istream& s
 
         view_m.reset(
             make_view(
-                "eve definition"_name, // TODO
+                layout_source,
                 getline_proc,
                 layout,
                 sheet_m,

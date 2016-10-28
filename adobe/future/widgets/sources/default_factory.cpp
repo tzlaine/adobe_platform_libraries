@@ -299,7 +299,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-    std::unique_ptr<eve_client_holder> make_view(name_t                                 file_path,
+    std::unique_ptr<eve_client_holder> make_view(const std::string&                     stream_source,
                                                  const line_position_t::getline_proc_t& getline_proc,
                                                  std::istream&                          stream,
                                                  sheet_t&                               sheet,
@@ -341,7 +341,7 @@ namespace adobe {
         );
 
         parse(stream,
-              line_position_t(file_path, getline_proc),
+              line_position_t(name_t(stream_source.c_str()), getline_proc),
               root_node,
               bind_layout(boost::bind(&client_assembler, boost::ref(token), _1, _2, _3, boost::cref(proc)),
                           result->layout_sheet_m,
