@@ -26,7 +26,10 @@ namespace {
 /****************************************************************************************************/
 
 inline bool always_break(adobe::name_t, const adobe::any_regular_t&)
-    { return true; }
+{ return true; }
+
+void do_nothing(adobe::name_t, adobe::name_t, adobe::name_t, const adobe::any_regular_t&)
+{}
 
 /****************************************************************************************************/
 
@@ -151,6 +154,7 @@ std::pair<const char*, bool> alert(const char*                    message_text,
                                          layout,
                                          sheet,
                                          &always_break,
+                                         &do_nothing,
                                          icon_directory_path));
 
     bool is_checked(get_value(result.command_m, "checkbox_value"_name).cast<bool>());

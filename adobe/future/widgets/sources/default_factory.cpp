@@ -304,7 +304,10 @@ namespace adobe {
                                                  std::istream&                          stream,
                                                  sheet_t&                               sheet,
                                                  behavior_t&                            root_behavior,
-                                                 const button_notifier_t&               notifier,
+                                                 vm_lookup_t&                           lookup,
+                                                 const button_notifier_t&               top_level_button_notifier,
+                                                 const button_notifier_t&               button_notifier,
+                                                 const signal_notifier_t&               signal_notifier,
                                                  size_enum_t                            dialog_size,
                                                  const widget_factory_proc_t&           proc,
                                                  platform_display_type                  display_root)
@@ -313,11 +316,14 @@ namespace adobe {
         factory_token_t                     token(get_main_display(),
                                                   sheet,
                                                   *(result.get()),
-                                                  notifier);
+                                                  lookup,
+                                                  top_level_button_notifier,
+                                                  button_notifier,
+                                                  signal_notifier);
 
-        vm_lookup_t       lookup;
+        virtual_machine_t evaluator;
 
-        lookup.attach_to(result->layout_sheet_m.machine_m);
+        lookup.attach_to(evaluator);
 
         /*
           We set the initial parent to be the root of the main display, an
@@ -325,7 +331,7 @@ namespace adobe {
         */
         get_main_display().set_root(display_root);
 
-        result->layout_sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::layout_variables, boost::ref(result->layout_sheet_m), _1));
+// TODO        result->layout_sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::layout_variables, boost::ref(result->layout_sheet_m), _1));
 
         widget_node_t root_node(
             dialog_size,
@@ -339,7 +345,7 @@ namespace adobe {
               root_node,
               bind_layout(boost::bind(&client_assembler, boost::ref(token), _1, _2, _3, boost::cref(proc)),
                           result->layout_sheet_m,
-                          result->layout_sheet_m.machine_m)
+                          evaluator)
         );
     
         result->contributing_m = sheet.contributing();

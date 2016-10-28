@@ -26,6 +26,7 @@
 #include <adobe/future/widgets/headers/widget_tokens.hpp>
 #include <adobe/future/widgets/headers/widget_utils.hpp>
 #include <adobe/future/widgets/headers/widget_factory_registry.hpp>
+#include <adobe/future/widgets/headers/virtual_machine_extension.hpp>
 #include <adobe/istream.hpp>
 #include <adobe/keyboard.hpp>
 #include <adobe/memory.hpp>
@@ -162,7 +163,13 @@ struct eve_client_holder : public boost::noncopyable
 
 /*************************************************************************************************/
 
-typedef boost::function<void (name_t action, const any_regular_t&)> button_notifier_t;
+typedef boost::function<bool (name_t action, const any_regular_t&)> button_notifier_t;
+
+/*************************************************************************************************/
+
+typedef boost::function<
+    void (name_t widget_type_name, name_t signal_name, name_t widget_id, const any_regular_t&)
+> signal_notifier_t;
 
 /****************************************************************************************************/
 
@@ -193,12 +200,18 @@ struct factory_token_t
 {
     factory_token_t(display_t&                display,
                     sheet_t&                  sheet,
-                    eve_client_holder& client_holder,
-                    button_notifier_t  notifier) :
+                    eve_client_holder&        client_holder,
+                    vm_lookup_t&              vm_lookup,
+                    button_notifier_t         top_level_button_notifier,
+                    button_notifier_t         button_notifier,
+                    signal_notifier_t         signal_notifier) :
         display_m(display),
         sheet_m(sheet),
         client_holder_m(client_holder),
-        notifier_m(notifier)
+        vm_lookup_m(vm_lookup),
+        top_level_button_notifier_m(top_level_button_notifier),
+        button_notifier_m(button_notifier),
+        signal_notifier_m(signal_notifier)
     { }
 
     //
@@ -221,12 +234,21 @@ struct factory_token_t
     //
     eve_client_holder& client_holder_m;
 
+    vm_lookup_t& vm_lookup_m;
+
+    button_notifier_t top_level_button_notifier_m;
+
     //
     /// The function to call when a button is pressed. This should be called by
     /// buttons and button-like widgets when they are hit (and have an action,
     /// rather than a state change).
     //
-    button_notifier_t notifier_m;
+    button_notifier_t button_notifier_m;
+
+    //
+    /// The function to call when an unhandled GG signal is emitted.
+    //
+    signal_notifier_t signal_notifier_m;
 };
 
 /*************************************************************************************************/
@@ -361,7 +383,10 @@ std::unique_ptr<eve_client_holder> make_view(name_t                             
                                              std::istream&                          stream,
                                              sheet_t&                               sheet,
                                              behavior_t&                            root_behavior,
-                                             const button_notifier_t&               notifier,
+                                             vm_lookup_t&                           lookup,
+                                             const button_notifier_t&               top_level_button_notifier,
+                                             const button_notifier_t&               button_notifier,
+                                             const signal_notifier_t&               signal_notifier,
                                              size_enum_t                            dialog_size,
                                              const widget_factory_proc_t&           proc = default_widget_factory_proc(),
                                              platform_display_type                  display_root=platform_display_type());

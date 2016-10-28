@@ -30,7 +30,7 @@ widget_node_t sublayout_t::evaluate(const std::string&       sheet_description,
                                     const widget_node_t&     parent,
                                     const factory_token_t&   token,
                                     const widget_factory_t&  factory,
-                                    const button_notifier_t& notifier,
+                                    const button_notifier_t& button_notifier,
                                     behavior_t&              behavior)
 {
     static const name_t               panel_name_s("panel"_name);
@@ -55,7 +55,10 @@ widget_node_t sublayout_t::evaluate(const std::string&       sheet_description,
                                    layout_stream,
                                    sublayout_sheet_m,
                                    behavior,
-                                   notifier,
+                                   token.vm_lookup_m,
+                                   button_notifier,
+                                   token.button_notifier_m,
+                                   token.signal_notifier_m,
                                    size,
                                    default_widget_factory_proc_with_factory(factory),
                                    display_root);

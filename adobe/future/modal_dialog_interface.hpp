@@ -183,7 +183,7 @@ public:
     dictionary_t            display_state_m;
     display_options_t       display_options_m;
     action_callback_t       button_callback_m;
-    signal_notifier_t       signal_notifier_m; // TODO
+    signal_notifier_t       signal_notifier_m;
     boost::filesystem::path working_directory_m;
     platform_display_type   parent_m;
     vm_lookup_t             vm_lookup_m;
@@ -196,6 +196,10 @@ public:
 
 private:
     bool              latch_button_callback(name_t action, const any_regular_t&);
+    void              latch_signal_callback(name_t widget_type_name,
+                                            name_t signal_name,
+                                            name_t widget_id,
+                                            const any_regular_t&);
 
     void              monitor_record(const dictionary_t& record_info);
     void              monitor_invariant(bool valid);
@@ -272,6 +276,7 @@ inline dialog_result_t handle_dialog(dictionary_t const & input,
                                      std::istream & layout_definition,
                                      std::istream & sheet_definition,
                                      action_callback_t button_callback,
+                                     signal_notifier_t signal_notifier,
                                      boost::filesystem::path const & working_directory,
                                      platform_display_type parent=platform_display_type())
 {
@@ -285,6 +290,7 @@ inline dialog_result_t handle_dialog(dictionary_t const & input,
     dialog.display_state_m = display_state;
     dialog.display_options_m = display_options;
     dialog.button_callback_m = button_callback;
+    dialog.signal_notifier_m = signal_notifier;
     dialog.working_directory_m = working_directory;
     dialog.parent_m = parent;
 

@@ -58,7 +58,6 @@ struct eve_client_holder;
 class window_server_t
 {
 public:
-    typedef boost::function<void (const name_t&, const any_regular_t&)> action_fallback_proc_t;
     //
     /// This constructor tells the window_server_t where to find
     /// Eve definitions referenced in @dialog commands, and which
@@ -70,7 +69,12 @@ public:
     ///             which is loaded (either via
     ///             push_back or @dialog).
     //
-    window_server_t(sheet_t& sheet, behavior_t& behavior);
+    window_server_t(sheet_t& sheet,
+                    behavior_t& behavior,
+                    vm_lookup_t& vm_lookup,
+                    const button_notifier_t& button_notifier,
+                    const signal_notifier_t& signal_notifier,
+                    const widget_factory_t& factory);
     //
     /// Hide and release all Eve dialogs created by this window server.
     //
@@ -104,48 +108,6 @@ public:
     //
     void push_back(std::istream& data, const boost::filesystem::path& file_path, const line_position_t::getline_proc_t& getline_proc, size_enum_t dialog_size);
     
-    #if 0
-    void set_back(const char* name, size_enum_t dialog_size);
-    void pop_back(bool cancel);
-    #endif
-    //
-    /// The window server can use different widget factories if
-    /// custom widgets need to be made. By default the window
-    /// server will use the "default_factory" function,
-    /// but an alternative function can be specified here. Note
-    /// that push_back just uses the current factory, so if a
-    /// custom factory is desired then it must be set before
-    /// using push_back.
-    ///
-    /// \param factory the new widget factory to use.
-    //
-    void set_widget_factory(const widget_factory_t& factory)
-    { widget_factory_m = factory; }
-    //
-    /// Some widgets, such as buttons in UI
-    /// core, have an action property. When an action is invoked
-    /// (e.g.: a button with an action value) the procedure given
-    /// to this function is invoked. This provides an easy way
-    /// to get feedback from a GUI.
-    ///
-    /// Note that some actions are automatically handled, these
-    /// are: @cancel, @ok and @reset.
-    ///
-    /// \param  proc    the function to call when a widget
-    ///         with an action is "activated".
-    //
-    void set_action_fallback(action_fallback_proc_t proc);    
-    // REVISIT (sparent) : Hack. These need to go to the correct window.
-    //
-    /// This function can be used to send an action to the open windows,
-    /// however it is only useful in debug mode (where it can be used to
-    /// frame and unframe visible widgets). It will probably be changed
-    /// soon.
-    ///
-    /// \param  action      the action to perform.
-    /// \param  parameter   the parameter associated with the action.
-    //
-    void dispatch_action(name_t action, const any_regular_t& parameter);
     //
     /// Return the number of windows which this window_server has open.
     ///
@@ -163,14 +125,16 @@ private:
     typedef std::list<eve_client_holder*>   window_list_t;
     typedef window_list_t::iterator         iterator;
     
-    void dispatch_window_action(iterator window, name_t action, const any_regular_t& parameter);
+    bool dispatch_window_action(iterator window, name_t action, const any_regular_t& parameter);
     void erase(iterator window);
     
-    sheet_t&               sheet_m;
-    behavior_t&            behavior_m;
-    window_list_t          window_list_m;
-    action_fallback_proc_t fallback_m;
-    widget_factory_t       widget_factory_m;
+    sheet_t&                 sheet_m;
+    behavior_t&              behavior_m;
+    window_list_t            window_list_m;
+    vm_lookup_t&             vm_lookup_m;
+    const button_notifier_t& button_notifier_m;
+    const signal_notifier_t& signal_notifier_m;
+    widget_factory_t         widget_factory_m;
 };
 
 /*************************************************************************************************/

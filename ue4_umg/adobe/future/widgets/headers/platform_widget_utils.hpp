@@ -9,6 +9,7 @@
 #define ADOBE_UI_CORE_OS_UTILITIES_HPP
 
 #include <string>
+#include <adobe/array.hpp>
 #include <adobe/name.hpp>
 #include <adobe/layout_attributes.hpp>
 #include <adobe/widget_attributes.hpp>
@@ -73,6 +74,36 @@ bool context_menu(platform_display_type parent,
                   const name_t* first,
                   const name_t* last,
                   name_t& result);
+
+/****************************************************************************************************/
+
+typedef boost::function<
+    void (name_t widget_type_name, name_t signal_name, name_t widget_id, const any_regular_t&)
+> signal_notifier_t;
+
+class sheet_t;
+
+/****************************************************************************************************/
+
+void handle_signal(signal_notifier_t const & signal_notifier,
+                   name_t widget_name,
+                   name_t signal_name,
+                   name_t widget_id,
+                   sheet_t& sheet,
+                   name_t bind,
+                   array_t expression,
+                   const any_regular_t& _1,
+                   name_t _1_name = name_t(),
+                   const any_regular_t& _2 = any_regular_t(),
+                   name_t _2_name = name_t(),
+                   const any_regular_t& _3 = any_regular_t(),
+                   name_t _3_name = name_t(),
+                   const any_regular_t& _4 = any_regular_t(),
+                   name_t _4_name = name_t());
+
+/****************************************************************************************************/
+
+void cell_and_expression(const any_regular_t& value, name_t& cell, array_t& expression);
 
 /****************************************************************************************************/
 

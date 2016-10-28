@@ -179,13 +179,15 @@ platform_display_type modal_dialog_t::init(std::istream& layout, std::istream& s
 
         view_m.reset(
             make_view(
-                // TODO
-                "eve definition"_name,
+                "eve definition"_name, // TODO
                 getline_proc,
                 layout,
                 sheet_m,
                 root_behavior_m,
+                vm_lookup_m,
+                button_callback_m,
                 boost::bind(&modal_dialog_t::latch_button_callback, boost::ref(*this), _1, _2),
+                boost::bind(&modal_dialog_t::latch_signal_callback, boost::ref(*this), _1, _2, _3, _4),
                 size_normal_s,
                 default_widget_factory_proc(),
                 parent_m
@@ -261,6 +263,17 @@ catch(...)
 {
     std::cerr << "Unknown exception (modal_dialog_t::latch_button_callback)" << std::endl;
     return false;
+}
+
+/****************************************************************************************************/
+
+void modal_dialog_t::latch_signal_callback(name_t widget_type_name,
+                                           name_t signal_name,
+                                           name_t widget_id,
+                                           const any_regular_t& value)
+{
+    if (signal_notifier_m)
+        signal_notifier_m(widget_type_name, signal_name, widget_id, value);
 }
 
 /****************************************************************************************************/

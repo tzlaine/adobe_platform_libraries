@@ -12,7 +12,9 @@
 #include <adobe/future/widgets/headers/widget_utils.hpp>
 #include <adobe/future/widgets/headers/platform_metrics.hpp>
 
-#include <adobe/name.hpp>
+#include <adobe/adam.hpp>
+#include <adobe/adam_parser.hpp>
+#include <adobe/dictionary.hpp>
 #include <adobe/unicode.hpp>
 
 #include <boost/cstdint.hpp>
@@ -124,9 +126,126 @@ bool context_menu(platform_display_type parent,
 
 /****************************************************************************************************/
 
-void set_font(platform_display_type window, int uxtheme_type)
+namespace {
+
+/****************************************************************************************************/
+
+inline void replace_placeholder(array_t& expression, name_t name, const any_regular_t& value)
 {
-    // TODO: Take a different font parameter, and set it on window.
+    for (std::size_t i = 0; i < expression.size(); ++i) {
+        name_t element_name;
+        if (expression[i].cast<name_t>(element_name) && element_name == name) {
+            expression[i] = value;
+            expression.erase(expression.begin() + i + 1);
+        }
+    }
+}
+
+/****************************************************************************************************/
+
+inline void replace_placeholders(array_t& expression,
+                                 const any_regular_t& _,
+                                 const any_regular_t& _1,
+                                 name_t _1_name,
+                                 const any_regular_t& _2,
+                                 name_t _2_name,
+                                 const any_regular_t& _3,
+                                 name_t _3_name,
+                                 const any_regular_t& _4,
+                                 name_t _4_name)
+{
+    replace_placeholder(expression, "_"_name, _);
+    replace_placeholder(expression, "_1"_name, _1);
+    replace_placeholder(expression, "_2"_name, _2);
+    replace_placeholder(expression, "_3"_name, _3);
+    replace_placeholder(expression, "_4"_name, _4);
+}
+
+/****************************************************************************************************/
+
+} // namespace
+
+/****************************************************************************************************/
+
+void handle_signal(signal_notifier_t const & signal_notifier,
+                   name_t widget_name,
+                   name_t signal_name,
+                   name_t widget_id,
+                   sheet_t& sheet,
+                   name_t bind,
+                   array_t expression,
+                   const any_regular_t& _1,
+                   name_t _1_name/* = name_t()*/,
+                   const any_regular_t& _2/* = any_regular_t()*/,
+                   name_t _2_name/* = name_t()*/,
+                   const any_regular_t& _3/* = any_regular_t()*/,
+                   name_t _3_name/* = name_t()*/,
+                   const any_regular_t& _4/* = any_regular_t()*/,
+                   name_t _4_name/* = name_t()*/)
+{
+    if (!bind && !signal_notifier)
+        return;
+
+    // TODO: If value is an adam_function_t, call it with the given parameters
+    // instead of trying to use placeholders.
+
+    any_regular_t _;
+    {
+        dictionary_t dict;
+
+        std::size_t count = 0;
+        if (_1_name) {
+            dict[_1_name] = _1;
+            ++count;
+        }
+        if (_2_name) {
+            dict[_2_name] = _2;
+            ++count;
+        }
+        if (_3_name) {
+            dict[_3_name] = _3;
+            ++count;
+        }
+        if (_4_name) {
+            dict[_4_name] = _4;
+            ++count;
+        }
+
+        if (count <= 1) {
+            _ = _1;
+        } else {
+            assert(_1_name);
+            _ = any_regular_t(dict);
+        }
+    }
+
+    any_regular_t value;
+    if (expression.empty()) {
+        value = _;
+    } else {
+        replace_placeholders(expression, _, _1, _1_name, _2, _2_name, _3, _3_name, _4, _4_name);
+        value = sheet.inspect(expression);
+    }
+
+    if (bind) {
+        sheet.set(bind, value);
+        sheet.update();
+    } else if (signal_notifier) {
+        signal_notifier(widget_name, signal_name, widget_id, value);
+    }
+}
+
+/****************************************************************************************************/
+
+void cell_and_expression(const any_regular_t& value, name_t& cell, array_t& expression)
+{
+    array_t cell_and_expression;
+    value.cast<name_t>(cell);
+    if (!cell && value.cast<array_t>(cell_and_expression)) {
+        cell = cell_and_expression[0].cast<name_t>();
+        const std::string& expression_string = cell_and_expression[1].cast<std::string>();
+        expression = parse_adam_expression(expression_string);
+    }
 }
 
 /****************************************************************************************************/

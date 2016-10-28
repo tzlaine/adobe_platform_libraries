@@ -21,10 +21,18 @@ namespace adobe {
 
 /****************************************************************************************************/
 
-window_server_t::window_server_t(sheet_t& sheet, behavior_t& behavior) :
+window_server_t::window_server_t(sheet_t& sheet,
+                                 behavior_t& behavior,
+                                 vm_lookup_t& vm_lookup,
+                                 const button_notifier_t& button_notifier,
+                                 const signal_notifier_t& signal_notifier,
+                                 const widget_factory_t& factory) :
     sheet_m(sheet),
     behavior_m(behavior),
-    widget_factory_m(default_asl_widget_factory())
+    vm_lookup_m(vm_lookup),
+    button_notifier_m(button_notifier),
+    signal_notifier_m(signal_notifier),
+    widget_factory_m(factory)
 { }
 
 /*************************************************************************************************/
@@ -75,8 +83,11 @@ void window_server_t::push_back(const char* name, size_enum_t dialog_size)
                                         stream,
                                         sheet_m,
                                         behavior_m,
+                                        vm_lookup_m,
+                                        button_notifier_m,
                                         boost::bind(&window_server_t::dispatch_window_action,
                                             boost::ref(*this), window, _1, _2),
+                                        signal_notifier_m,
                                         dialog_size,
                                         default_widget_factory_proc_with_factory(widget_factory_m)).release();
     
@@ -114,8 +125,11 @@ void window_server_t::push_back(std::istream&                                   
                                         data,
                                         sheet_m,
                                         behavior_m,
+                                        vm_lookup_m,
+                                        button_notifier_m,
                                         boost::bind(&window_server_t::dispatch_window_action,
                                             boost::ref(*this), window, _1, _2),
+                                        signal_notifier_m,
                                         dialog_size,
                                         default_widget_factory_proc_with_factory(widget_factory_m)).release();
 
@@ -136,15 +150,10 @@ void window_server_t::erase(iterator window)
 
 /*************************************************************************************************/
 
-void window_server_t::set_action_fallback(action_fallback_proc_t proc)
+bool window_server_t::dispatch_window_action(iterator window, name_t action, const any_regular_t& parameter)
 {
-    fallback_m = proc;
-}
+    bool retval = false;
 
-/*************************************************************************************************/
-
-void window_server_t::dispatch_window_action(iterator window, name_t action, const any_regular_t& parameter)
-{
     if (action == "reset"_name)
     {
         sheet_m.set((*window)->contributing_m);
@@ -160,34 +169,20 @@ void window_server_t::dispatch_window_action(iterator window, name_t action, con
         sheet_m.update();
 
         general_deferred_proc_queue().insert(boost::bind(&window_server_t::erase, boost::ref(*this), window));
+        retval = true;
     }
     else if (action == "ok"_name)
     {
         general_deferred_proc_queue().insert(boost::bind(&window_server_t::erase, boost::ref(*this), window));
+        retval = true;
+    }
+    else
+    {
+        retval = button_notifier_m(action, parameter);
     }
 
-    if (fallback_m)
-        fallback_m(action, parameter); 
+    return retval;
 }
-
-/*************************************************************************************************/
-
-void window_server_t::dispatch_action(name_t action, const any_regular_t& parameter)
-{
-
-    if (fallback_m)
-        fallback_m(action, parameter);
-}
-
-/*************************************************************************************************/
-
-#if 0
-void window_server_t::set_back(const char* file_name, size_enum_t dialog_size)
-{
-    if (window_stack_m.size()) pop_back(false);
-    push_back(file_name, dialog_size);
-}
-#endif
 
 /****************************************************************************************************/
 
