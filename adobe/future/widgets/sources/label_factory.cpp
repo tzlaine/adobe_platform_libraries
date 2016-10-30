@@ -37,6 +37,7 @@ void create_widget(const dictionary_t& parameters,
     get_value(parameters, key_name, name);
     get_value(parameters, key_alt_text, alt_text);
     get_value(parameters, key_characters, characters);
+    // style, class
 
     widget = new label_t(name, alt_text, characters);
 }

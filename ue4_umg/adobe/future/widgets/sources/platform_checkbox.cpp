@@ -22,41 +22,45 @@ namespace adobe {
 
 /****************************************************************************************************/
 
+namespace {
+
+/****************************************************************************************************/
+
+void checkbox_checked (checkbox_t & checkbox, bool checked)
+{
+    if (checkbox.hit_proc_m)
+        checkbox.hit_proc_m(checked ? checkbox.true_value_m : checkbox.false_value_m);
+
+    if (checkbox.checked_proc_m)
+        checkbox.checked_proc_m(checked ? checkbox.true_value_m : checkbox.false_value_m);
+}
+
+/****************************************************************************************************/
+
+} // namespace
+
+/****************************************************************************************************/
+
 checkbox_t::checkbox_t(const std::string& name,
                        const any_regular_t& true_value,
                        const any_regular_t& false_value,
-                       const std::string& alt_text) :
+                       const std::string& alt_text,
+                       name_t signal_id) :
     control_m(),
+    control_text_m(),
     true_value_m(true_value),
     false_value_m(false_value),
     name_m(name),
-    alt_text_m(alt_text)
+    alt_text_m(alt_text),
+    signal_id_m(signal_id)
 { }
 
 /****************************************************************************************************/
 
 void checkbox_t::measure(extents_t& result)
 {
-    /* TODO
-    result = metrics::measure(control_m, BP_CHECKBOX);
-
-    //
-    // Get the text margins, and factor those into the bounds.
-    //
-    RECT margins = {0, 0, 0, 0};
-
-    metrics::set_window(control_m);
-
-    if (metrics::get_button_text_margins(BP_CHECKBOX, margins))
-    {
-        //
-        // Add the width margins in. The height margins aren't important because
-        // the widget is already large enough to contain big text (as calculated
-        // by calculate_best_bounds).
-        //
-        result.width() += margins.left + margins.right;
-    }
-    */
+    assert(control_m);
+    result = metrics::measure_text(name_m, *this, control_text_m->Font);
 }
 
 /****************************************************************************************************/
@@ -64,7 +68,6 @@ void checkbox_t::measure(extents_t& result)
 void checkbox_t::place(const place_data_t& place_data)
 {
     assert(control_m);
-    
     implementation::set_control_bounds(control_m, place_data);
 }
 
@@ -73,7 +76,6 @@ void checkbox_t::place(const place_data_t& place_data)
 void checkbox_t::enable(bool make_enabled)
 {
     assert(control_m);
-
     set_control_enabled(control_m, make_enabled);
 }
 
@@ -105,7 +107,6 @@ void checkbox_t::display(const any_regular_t& new_value)
 void checkbox_t::monitor(const setter_type& proc)
 {
     assert(control_m);
-
     hit_proc_m = proc;
 }
 
@@ -116,14 +117,33 @@ platform_display_type insert<checkbox_t>(display_t& display,
                                          platform_display_type& parent,
                                          checkbox_t& element)
 {
-    /* TODO
-    HWND parent_hwnd(parent);
+    assert(element.control_m == nullptr);
+    assert(element.control_text_m == nullptr);
 
-    initialize(element, parent_hwnd);
+    auto root = implementation::get_root_widget(parent);
+
+    if (root == nullptr)
+        ADOBE_THROW_LAST_ERROR;
+
+    element.control_m = root->new_child<Ustyleable_check_box>().widget_;
+    element.control_text_m = root->new_child<Ustyleable_text_block>().widget_;
+
+    if (element.control_m == nullptr || element.control_text_m == nullptr)
+        ADOBE_THROW_LAST_ERROR;
+
+    element.control_m->SetContent(element.control_text_m);
+
+    element.control_text_m->SetText(FText::FromString(FString(element.name_m.c_str())));
+
+    element.control_m->set_signal_forward_fn(
+        [&element](bool checked) { checkbox_checked(element, checked); }
+    );
+    element.control_m->OnCheckStateChanged.AddDynamic(element.control_m, &Ustyleable_check_box::forward_signal);
+
+    if (!element.alt_text_m.empty())
+        implementation::set_control_alt_text(element.control_m, element.alt_text_m);
 
     return display.insert(parent, element.control_m);
-    */
-    return platform_display_type();
 }
 
 /****************************************************************************************************/

@@ -10,6 +10,9 @@
 
 /****************************************************************************************************/
 
+#include "widgets/styleable_check_box.h"
+#include "widgets/styleable_text_block.h"
+
 #include <adobe/config.hpp>
 
 #include <adobe/any_regular.hpp>
@@ -43,10 +46,11 @@ struct checkbox_t
     typedef any_regular_t                      model_type;
     typedef boost::function<void (const model_type&)> setter_type;
 
-    checkbox_t(const std::string&          name,
+    checkbox_t(const std::string& name,
                const any_regular_t& true_value,
                const any_regular_t& false_value,
-               const std::string&          alt_text);
+               const std::string& alt_text,
+               name_t signal_id);
 
     void measure(extents_t& result);
 
@@ -58,17 +62,20 @@ struct checkbox_t
 
     void monitor(const setter_type& proc);
 
-    friend bool operator == (const checkbox_t& x, const checkbox_t& y);
+    friend bool operator== (const checkbox_t& x, const checkbox_t& y);
 
-#if 1 // TODO
-    platform_display_type control_m;
-#endif
-    setter_type          hit_proc_m;
+    Ustyleable_check_box * control_m;
+    Ustyleable_text_block * control_text_m;
+
+    boost::function<void (any_regular_t const &)> checked_proc_m;
+
+    setter_type hit_proc_m;
     any_regular_t true_value_m;
     any_regular_t false_value_m;
     any_regular_t current_value_m;
-    std::string          name_m;
-    std::string          alt_text_m;
+    std::string name_m;
+    std::string alt_text_m;
+    name_t signal_id_m;
 };
 
 /****************************************************************************************************/

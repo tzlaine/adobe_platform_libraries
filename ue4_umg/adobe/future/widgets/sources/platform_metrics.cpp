@@ -42,9 +42,7 @@ namespace detail {
 /****************************************************************************************************/
 
 float measurement_size (FSlateFontInfo const & font_info)
-{
-    return std::sqrt(font_info.Size);
-}
+{ return std::sqrt(font_info.Size); }
 
 /****************************************************************************************************/
 
@@ -54,17 +52,17 @@ float measurement_size (FSlateFontInfo const & font_info)
 
 FVector2D get_size(slider_t const & control)
 {
-    return FVector2D(); // TODO: Return tab size.
+    return FVector2D(0, 0); // TODO: Return tab size.
 }
 
 FVector2D get_size(checkbox_t const & control)
 {
-    return FVector2D(); // TODO: REturn box size + x=5 gap
+    return FVector2D(0, 0); // TODO: REturn box size + x=5 gap
 }
 
 FVector2D get_size(radio_button_t const & control)
 {
-    return FVector2D(); // TODO: REturn box size + x=5 gap
+    return FVector2D(0, 0); // TODO: REturn box size + x=5 gap
 }
 
 FVector2D get_size(group_t const & control)

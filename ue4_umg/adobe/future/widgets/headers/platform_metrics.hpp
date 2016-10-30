@@ -21,6 +21,11 @@
 
 namespace adobe {
 
+struct slider_t;
+struct checkbox_t;
+struct radio_button_t;
+struct group_t;
+
 /****************************************************************************************************/
 
 /// The adobe::metrics suite of functions can fetch information
@@ -83,10 +88,10 @@ inline float measure_baseline(FSlateFontInfo const & font_info)
 
 /****************************************************************************************************/
 
-FVector2D get_size(struct slider_t const & control);
-FVector2D get_size(struct checkbox_t const & control);
-FVector2D get_size(struct radio_button_t const & control);
-FVector2D get_size(struct group_t const & control);
+FVector2D get_size(slider_t const & control);
+FVector2D get_size(checkbox_t const & control);
+FVector2D get_size(radio_button_t const & control);
+FVector2D get_size(group_t const & control);
 
 template <typename Control>
 FVector2D get_size(Control const & control)
