@@ -32,13 +32,14 @@ void create_widget(const dictionary_t&       parameters,
     std::string name;
     std::string alt_text;
     long        characters(5);
-    unit_t      default_unit(to_unit(parameters));
+    unit_t      default_unit;
 
     std::vector<unit_t> unit_set;
 
     get_value(parameters, key_name, name);
     get_value(parameters, key_alt_text, alt_text);
     get_value(parameters, key_characters, characters);
+    // TODO: style, class
 
     if (parameters.count(key_units) == 0)
     {

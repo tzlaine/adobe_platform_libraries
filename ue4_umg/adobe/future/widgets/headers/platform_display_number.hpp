@@ -10,6 +10,8 @@
 
 /****************************************************************************************************/
 
+#include "widgets/styleable_text_block.h"
+
 #include <adobe/memory.hpp>
 #include <boost/operators.hpp>
 #include <adobe/layout_attributes.hpp>
@@ -38,27 +40,17 @@ struct display_number_t  : boost::noncopyable
                      ForwardIterator last, 
                      int characters);
 
-#if 1 // TODO
-    platform_display_type    control_m;
-#endif
-#if 1 // TODO
-    int                      bounds_m;
-#endif
+    Ustyleable_text_block * control_m;
+
     std::string              name_m;
     std::string              alt_text_m;
     unit_set_t               unit_set_m;
     std::wstring::size_type  label_chars_m;
     int                      characters_m;
 
-#if 1 // TODO
-    void initialize(platform_display_type parent);
-#endif
-
     void measure(extents_t& result);
     void measure_vertical(extents_t& calculated_horizontal, const place_data_t& placed_horizontal);       
-
     void place(const place_data_t& place_data);
-
     void display(const model_type& value);
 };
 
@@ -77,13 +69,6 @@ display_number_t::display_number_t(
       label_chars_m(0),
       characters_m(characters)
 { }
-
-/****************************************************************************************************/
-
-#if 1 // TODO
-inline platform_display_type get_display(display_number_t & widget)
-{ return widget.control_m; }
-#endif
 
 /****************************************************************************************************/
 

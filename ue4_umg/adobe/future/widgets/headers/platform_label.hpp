@@ -39,6 +39,10 @@ namespace adobe {
                           extents_t& calculated_horizontal,
                           const place_data_t& placed_horizontal);
 
+    void measure_vertical(Ustyleable_text_block * control,
+                          extents_t& calculated_horizontal,
+                          const place_data_t& placed_horizontal);
+
     void place(label_t& value, const place_data_t& place_data);
 
     void enable(label_t& value, bool make_enabled);

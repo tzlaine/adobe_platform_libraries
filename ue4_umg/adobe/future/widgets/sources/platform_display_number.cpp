@@ -13,6 +13,7 @@
 #include <adobe/future/widgets/headers/display.hpp>
 #include <adobe/future/widgets/headers/widget_utils.hpp>
 #include <adobe/future/widgets/headers/platform_display_number.hpp>
+#include <adobe/future/widgets/headers/platform_label.hpp>
 #include <adobe/future/widgets/headers/platform_metrics.hpp>
 #include <adobe/unicode.hpp>
 
@@ -84,51 +85,9 @@ namespace adobe {
 
 /****************************************************************************************************/
 
-namespace implementation {
-
-/****************************************************************************************************/
-
-extern void throw_last_error_exception(const char* file, long line);
-
-/****************************************************************************************************/
-
-} // namespace implementation
-
-/****************************************************************************************************/
-
-void display_number_t::initialize(platform_display_type parent)
-{
-    /* TODO
-    RECT bounds = { 0, 0, 100, 100 };
-
-    bounds_m = bounds;
-
-    long width(bounds.right - bounds.left);
-    long height(bounds.bottom - bounds.top);
-
-    control_m = ::CreateWindowExW(WS_EX_COMPOSITED, L"STATIC",
-                                 NULL,
-                                 WS_CHILD | WS_VISIBLE,
-                                 bounds.left, bounds.top, width, height,
-                                 parent,
-                                 NULL,
-                                 ::GetModuleHandle(NULL),
-                                 NULL);
-
-    if (control_m == NULL)
-        ADOBE_THROW_LAST_ERROR;
-
-    if (!alt_text_m.empty())
-        implementation::set_control_alt_text(control_m, alt_text_m);
-
-    set_font(control_m, EP_EDITTEXT);
-    */
-}
-
-/****************************************************************************************************/
-
 void display_number_t::place(const place_data_t& place_data)
 {
+    assert(control_m);
     implementation::set_control_bounds(control_m, place_data);
 }
 
@@ -137,8 +96,8 @@ void display_number_t::place(const place_data_t& place_data)
 void display_number_t::display(const model_type& value)
 {
     assert(control_m);
-
-    // TODO ::SetWindowTextW(control_m, set_field_text(name_m, value, unit_set_m).c_str());
+    std::string const & value_text = set_field_text(name_m, value, unit_set_m);
+    control_m->SetText(FText::FromString(FString(value_text.c_str())));
 }
 
 /****************************************************************************************************/
@@ -147,27 +106,22 @@ void display_number_t::measure(extents_t& result)
 {
     assert(control_m);
 
-#if 0 // TODO
-    extents_t space_extents(metrics::measure_text(std::string(" "), control_m, EP_EDITTEXT));
+    label_t tmp("", "", 0);
+
+    extents_t space_extents =
+        metrics::measure_text(" ", tmp, control_m->Font);
     extents_t unit_max_extents;
-    extents_t label_extents(metrics::measure_text(name_m, control_m, EP_EDITTEXT));
+    extents_t label_extents =
+        metrics::measure_text(name_m, tmp, control_m->Font);
     extents_t characters_extents =
-        metrics::measure_text(std::string(characters_m, '0'), control_m, EP_EDITTEXT);
+        metrics::measure_text(std::string(characters_m, '0'), tmp, control_m->Font);
 
-    for (display_number_t::unit_set_t::iterator iter(unit_set_m.begin()),
-         end(unit_set_m.end()); iter != end; ++iter)
-        {
-            extents_t tmp(metrics::measure_text(iter->name_m, control_m, EP_EDITTEXT));
+    for (unit_t const & unit : unit_set_m) {
+        extents_t tmp_extents(metrics::measure_text(unit.name_m, tmp, control_m->Font));
 
-            if (tmp.width() > unit_max_extents.width())
-                unit_max_extents = tmp;
-        }
-#else
-    extents_t space_extents;
-    extents_t unit_max_extents;
-    extents_t label_extents;
-    extents_t characters_extents;
-#endif
+        if (tmp_extents.width() > unit_max_extents.width())
+            unit_max_extents = tmp_extents;
+    }
 
     // set up default settings (baseline, etc.)
     result = space_extents;
@@ -198,78 +152,7 @@ void display_number_t::measure(extents_t& result)
 /****************************************************************************************************/
 
 void display_number_t::measure_vertical(extents_t& calculated_horizontal, const place_data_t& placed_horizontal)
-{
-    /* TODO
-    assert(control_m);
-
-    RECT save_bounds;
-
-    implementation::get_control_bounds(control_m, save_bounds);
-
-    place_data_t static_bounds;
-
-    top(static_bounds) = top(placed_horizontal);
-    left(static_bounds) = left(placed_horizontal);
-    width(static_bounds) = width(placed_horizontal);
-    height(static_bounds) = 10000; // bottomless
-
-    implementation::set_control_bounds(control_m, static_bounds);
-
-    HDC hdc(::GetWindowDC(control_m));
-    std::string title(implementation::get_window_title(control_m));
-
-    std::string wtitle;
-    to_utf16(title.begin(), title.end(), std::back_inserter(wtitle));
-    RECT out_extent;
-
-//    metrics::set_theme_name(L"Edit");
-    //
-    // If we don't have the type of this widget, then we should return a
-    // zero sized rectangle. This is usually correct, and a good assumption
-    // anyway.
-    //
-    int uxtheme_type = EP_EDITTEXT;
-    //
-    // Get the text metrics (and calculate the baseline of this widget)
-    //
-    TEXTMETRIC widget_tm;
-    bool have_tm = metrics::get_font_metrics(uxtheme_type, widget_tm);
-
-    assert(have_tm);
-
-    const RECT in_extents =
-    {
-        left(static_bounds),
-        top(static_bounds),
-        right(static_bounds),
-        bottom(static_bounds)
-    };
-
-    bool have_extents = metrics::get_text_extents(uxtheme_type,
-        wtitle.c_str(), out_extent, &in_extents);
-    
-    assert(have_extents);
-
-    extents_t::slice_t& vert = calculated_horizontal.vertical();
-    vert.length_m = out_extent.bottom - out_extent.top;
-    // set the baseline for the text
- 
-    metrics::set_window(control_m);
-
-    if (have_tm)
-        // distance from top to baseline
-        vert.guide_set_m.push_back(widget_tm.tmHeight - widget_tm.tmDescent);
-
-    place_data_t restore_bounds;
-
-    top(restore_bounds) = save_bounds.top;
-    left(restore_bounds) = save_bounds.left;
-    width(restore_bounds) = save_bounds.right - save_bounds.left;
-    height(restore_bounds) = save_bounds.bottom - save_bounds.top;
-
-    implementation::set_control_bounds(control_m, restore_bounds);
-    */
-}
+{ ::adobe::measure_vertical(control_m, calculated_horizontal, placed_horizontal); }
 
 /****************************************************************************************************/
 
@@ -280,8 +163,24 @@ platform_display_type insert<display_number_t>(display_t& display,
                                                platform_display_type& parent,
                                                display_number_t& element)
 {
-    element.initialize(parent);
-    return display.insert(parent, get_display(element));
+    assert(element.control_m == nullptr);
+
+    auto root = implementation::get_root_widget(parent);
+
+    if (root == nullptr)
+        ADOBE_THROW_LAST_ERROR;
+
+    element.control_m = root->new_child<Ustyleable_text_block>().widget_;
+
+    if (element.control_m == nullptr)
+        ADOBE_THROW_LAST_ERROR;
+
+    element.control_m->SetText(FText::FromString(FString(element.name_m.c_str())));
+
+    if (!element.alt_text_m.empty())
+        implementation::set_control_alt_text(element.control_m, element.alt_text_m);
+
+    return display.insert(parent, element.control_m);
 }
 
 

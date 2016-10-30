@@ -70,21 +70,29 @@ void measure(label_t& value, extents_t& result)
 
 /****************************************************************************************************/
 
-void measure_vertical(label_t& value, extents_t& calculated_horizontal, 
+void measure_vertical(label_t& label,
+                      extents_t& calculated_horizontal, 
+                      const place_data_t& placed_horizontal)
+{ measure_vertical(label.control_m, calculated_horizontal, placed_horizontal); }
+
+/****************************************************************************************************/
+
+void measure_vertical(Ustyleable_text_block * control,
+                      extents_t& calculated_horizontal, 
                       const place_data_t& placed_horizontal)
 {
-    assert(value.control_m);
+    assert(control);
 
-    value.control_m->set_wrap_width(width(placed_horizontal));
-    value.control_m->TakeWidget();
-    value.control_m->SynchronizeProperties();
-    value.control_m->ForceLayoutPrepass();
-    FVector2D const desired_size = value.control_m->GetDesiredSize();
+    control->set_wrap_width(width(placed_horizontal));
+    control->TakeWidget();
+    control->SynchronizeProperties();
+    control->ForceLayoutPrepass();
+    FVector2D const desired_size = control->GetDesiredSize();
 
     extents_t::slice_t & vert = calculated_horizontal.vertical();
     vert.length_m = desired_size.Y;
 
-    long const baseline = metrics::measure_baseline(value.control_m->Font);
+    long const baseline = metrics::measure_baseline(control->Font);
     vert.guide_set_m.push_back(baseline);
     // TODO: Originally this was:
     // distance from top to baseline
@@ -95,9 +103,7 @@ void measure_vertical(label_t& value, extents_t& calculated_horizontal,
 /****************************************************************************************************/
 
 void enable(label_t& value, bool make_enabled)
-{
-    set_control_enabled(value.control_m, make_enabled);
-}
+{ set_control_enabled(value.control_m, make_enabled); }
 
 /****************************************************************************************************/
 
