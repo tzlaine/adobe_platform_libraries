@@ -331,7 +331,9 @@ namespace adobe {
         */
         get_main_display().set_root(display_root);
 
-// TODO        result->layout_sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::layout_variables, boost::ref(result->layout_sheet_m), _1));
+        evaluator.set_variable_lookup(
+            boost::bind(&layout_variables, boost::ref(result->layout_sheet_m), _1)
+        );
 
         widget_node_t root_node(
             dialog_size,
