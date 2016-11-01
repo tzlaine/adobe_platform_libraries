@@ -50,7 +50,7 @@ checkbox_t::checkbox_t(const std::string& name,
     control_text_m(),
     true_value_m(true_value),
     false_value_m(false_value),
-    name_m(name),
+    name_m(" " + name),
     alt_text_m(alt_text),
     signal_id_m(signal_id)
 { }
@@ -60,7 +60,7 @@ checkbox_t::checkbox_t(const std::string& name,
 void checkbox_t::measure(extents_t& result)
 {
     assert(control_m);
-    result = metrics::measure_text(name_m, *this, control_text_m->Font);
+    result = metrics::measure_text(name_m, size_without_text_m, control_text_m->Font);
 }
 
 /****************************************************************************************************/
@@ -90,16 +90,14 @@ void checkbox_t::display(const any_regular_t& new_value)
 
     current_value_m = new_value;
 
-    /* TODO
-    WPARAM state(BST_INDETERMINATE);
+    ECheckBoxState state = ECheckBoxState::Undetermined;
 
     if (current_value_m == true_value_m)
-        state = BST_CHECKED;
+        state = ECheckBoxState::Checked;
     else if (current_value_m == false_value_m)
-        state = BST_UNCHECKED;
+        state = ECheckBoxState::Unchecked;
 
-    ::SendMessage(control_m, BM_SETCHECK, state, 0);
-    */
+    control_m->SetCheckedState(state);
 }
 
 /****************************************************************************************************/
@@ -130,6 +128,11 @@ platform_display_type insert<checkbox_t>(display_t& display,
 
     if (element.control_m == nullptr || element.control_text_m == nullptr)
         ADOBE_THROW_LAST_ERROR;
+
+    element.control_m->TakeWidget();
+    element.control_m->SynchronizeProperties();
+    element.control_m->ForceLayoutPrepass();
+    element.size_without_text_m = element.control_m->GetDesiredSize();
 
     element.control_m->SetContent(element.control_text_m);
 

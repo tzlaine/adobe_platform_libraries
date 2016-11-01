@@ -67,6 +67,8 @@ struct checkbox_t
     Ustyleable_check_box * control_m;
     Ustyleable_text_block * control_text_m;
 
+    FVector2D size_without_text_m;
+
     boost::function<void (any_regular_t const &)> checked_proc_m;
 
     setter_type hit_proc_m;

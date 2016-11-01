@@ -50,23 +50,87 @@ float measurement_size (FSlateFontInfo const & font_info)
 
 /****************************************************************************************************/
 
-FVector2D get_size(slider_t const & control)
+FVector2D get_text_extents(std::string const & text, FSlateFontInfo const & font_info)
 {
-    return FVector2D(0, 0); // TODO: Return tab size.
+    const TSharedRef<FSlateFontMeasure> font_measure =
+        FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
+    return font_measure->Measure(
+        FText::FromString(text.c_str()),
+        font_info,
+        detail::measurement_size(font_info)
+    );
 }
 
-FVector2D get_size(checkbox_t const & control)
+/****************************************************************************************************/
+
+float measure_baseline(TSharedRef<FSlateFontMeasure> const & font_measure,
+                       FSlateFontInfo const & font_info)
+{ return std::abs(font_measure->GetBaseline(font_info, detail::measurement_size(font_info))); }
+
+/****************************************************************************************************/
+
+float measure_baseline(FSlateFontInfo const & font_info)
 {
-    return FVector2D(0, 0); // TODO: REturn box size + x=5 gap
+    TSharedRef<FSlateFontMeasure> const font_measure =
+        FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
+    return measure_baseline(font_measure, font_info);
 }
 
-FVector2D get_size(radio_button_t const & control)
-{
-    return FVector2D(0, 0); // TODO: REturn box size + x=5 gap
-}
+/****************************************************************************************************/
 
-FVector2D get_size(group_t const & control)
+FVector2D get_size (slider_t const & control)
+{ return FVector2D(8, 8); /* minimal tab size */ }
+
+FVector2D get_size (group_t const & control)
 { return FVector2D(8, 8); }
+
+/****************************************************************************************************/
+
+extents_t measure_text (
+    std::string const & text,
+    FVector2D size_without_text,
+    FSlateFontInfo const & font_info
+) {
+    extents_t result;
+
+    const TSharedRef<FSlateFontMeasure> font_measure =
+        FSlateApplication::Get().GetRenderer()->GetFontMeasureService();
+
+    FVector2D const text_extents = get_text_extents(text, font_info);
+
+    //
+    // Now we can calculate the baseline of this widget. There are two cases:
+    //
+    //  (a) The text height is larger or the same as the widget height.
+    //  (b) The text height is smaller than the widget height.
+    //
+    // The height which we return as our best bound is the maximum of the
+    // text height and the widget height (with margins added).
+    //
+    // In case (a) the baseline (measured from the top) is the ascent of the
+    // text plus the top margin. In case (b) the baseline is the ascent of the
+    // text plus the top margin, plus (widget height - text height)/2.
+    //
+
+    long const text_height =
+        font_measure->GetMaxCharacterHeight(font_info, detail::measurement_size(font_info));
+
+    long const widget_width = size_without_text.X;
+    long const widget_height = size_without_text.Y;
+
+    long baseline = measure_baseline(font_measure, font_info);
+    baseline += std::max(0l, (widget_height - text_height) / 2);
+
+    result.slice_m[extents_slices_t::vertical].guide_set_m.push_back(baseline);
+
+    result.width() += widget_width;
+    result.height() += widget_height;
+
+    result.width() += text_extents.X;
+    result.height() = std::max<int>(result.height(), text_height);
+
+    return result;
+}
 
 /****************************************************************************************************/
 
